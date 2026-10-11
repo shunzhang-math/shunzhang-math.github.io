@@ -3,28 +3,124 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Academic homepage of Shun Zhang, Associate Professor of Mathematics at City University of Hong Kong.">
   <title>Shun Zhang</title>
   <style>
+    :root {
+      color-scheme: light;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     html, body {
-      height: 100%;
+      min-height: 100%;
       margin: 0;
     }
+
     body {
       display: grid;
       place-items: center;
+      padding: 2rem;
       background: #ffffff;
-      color: #111111;
+      color: #171717;
       font-family: Georgia, "Times New Roman", serif;
+      text-align: center;
     }
+
+    main {
+      width: min(100%, 760px);
+    }
+
     h1 {
       margin: 0;
-      font-size: clamp(2.5rem, 8vw, 5rem);
+      font-size: clamp(2.8rem, 9vw, 5.4rem);
       font-weight: 500;
-      letter-spacing: 0.02em;
+      line-height: 1.05;
+      letter-spacing: 0.01em;
+    }
+
+    .chinese-name {
+      margin: 0.55rem 0 0;
+      font-family: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+      font-size: clamp(1.35rem, 3.5vw, 1.8rem);
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      color: #333333;
+    }
+
+    .position {
+      margin: 1.25rem 0 0;
+      font-size: clamp(1.05rem, 2.5vw, 1.3rem);
+      line-height: 1.65;
+      color: #444444;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.65rem 1.25rem;
+      margin-top: 2rem;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.96rem;
+    }
+
+    a {
+      color: #174f86;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      padding-bottom: 0.12rem;
+    }
+
+    a:hover,
+    a:focus-visible {
+      border-bottom-color: currentColor;
+    }
+
+    a:focus-visible {
+      outline: 2px solid #174f86;
+      outline-offset: 4px;
+    }
+
+    .separator {
+      color: #aaaaaa;
+      user-select: none;
+    }
+
+    @media (max-width: 520px) {
+      nav {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
+      }
+
+      .separator {
+        display: none;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Shun Zhang</h1>
+  <main>
+    <h1>Shun Zhang</h1>
+    <p class="chinese-name" lang="zh-Hant">章順</p>
+
+    <p class="position">
+      Associate Professor of Mathematics<br>
+      City University of Hong Kong
+    </p>
+
+    <nav aria-label="Academic links">
+      <a href="mailto:shun.zhang@cityu.edu.hk">Email</a>
+      <span class="separator" aria-hidden="true">·</span>
+      <a href="https://scholar.google.com.hk/citations?user=lp8ka9kAAAAJ&amp;hl=en"
+         target="_blank" rel="noopener noreferrer">Google Scholar</a>
+      <span class="separator" aria-hidden="true">·</span>
+      <a href="https://github.com/shunzhang-math"
+         target="_blank" rel="noopener noreferrer">GitHub</a>
+    </nav>
+  </main>
 </body>
 </html>
