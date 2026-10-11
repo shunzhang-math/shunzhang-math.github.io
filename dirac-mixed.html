@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Why a Dirac source is first a failure of duality for mixed finite element methods, and how divergence-form splitting restores the formulation in the Lp scale.">
+<title>A Dirac Source Is First a Failure of Duality | Shun Zhang</title>
+<style>
+*{box-sizing:border-box}body{margin:0;color:#202020;background:#fff;font:18px/1.72 Georgia,"Times New Roman",serif}.page{width:min(100% - 2.5rem,850px);margin:auto;padding:2.2rem 0 5rem}a{color:#174f86}.home{font:15px Arial,sans-serif;text-decoration:none}h1{margin:3.2rem 0 .45rem;font-size:clamp(2.45rem,7vw,4.6rem);font-weight:500;line-height:1.08}.zh-title{margin:0;color:#555;font-size:1.55rem}.lead{margin:2rem 0 0;font-size:1.3rem;line-height:1.6}.zh{font-family:"Noto Serif TC","Songti TC","PMingLiU",serif;color:#555}.lead.zh{margin-top:.8rem}section{margin-top:3.8rem}h2{border-bottom:1px solid #ddd;padding-bottom:.45rem;font-size:1.65rem;font-weight:500}h2 .zh{font-size:.76em}.box{margin:1.55rem 0;padding:1.25rem 1.4rem;border-left:4px solid #174f86;background:#f6f8fa;font-size:1.1rem}.box .zh{display:block;margin-top:.7rem}.equation{overflow-x:auto;margin:1.4rem 0;padding:1rem 1.1rem;text-align:center;font-size:1.1rem;line-height:1.9;white-space:nowrap}.eqline{display:block}.chain{margin:1.5rem 0;padding:1.3rem;border:1px solid #d9dfe5;background:#fbfcfd;text-align:center}.comparison{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}.card{padding:1.2rem;border:1px solid #ddd;background:#fcfcfc}.card strong{display:block;margin-bottom:.4rem}.paper{padding:1.4rem;border:1px solid #ddd;background:#fcfcfc}.paper-title{font-weight:700}.links{font:15px Arial,sans-serif}li{margin:.8rem 0}footer{margin-top:5rem;border-top:1px solid #ddd;padding-top:1rem;color:#777;font:14px Arial,sans-serif}@media(max-width:620px){body{font-size:17px}.page{width:min(100% - 2rem,850px)}.comparison{grid-template-columns:1fr}.equation{font-size:.98rem}}
+</style>
+</head>
+<body><main class="page">
+<a class="home" href="index.html">← Shun Zhang</a>
+<header>
+<h1>A Dirac Source Is First a Failure of Duality</h1>
+<p class="zh-title zh">對混合有限元方法而言，Dirac 源首先是對偶失效，而不是正則性不足</p>
+<p class="lead">Before approximation begins, the usual mixed formulation is already undefined.</p>
+<p class="lead zh">在開始討論逼近之前，通常的混合格式本身就已經沒有定義。</p>
+</header>
+
+<section><h2>The Usual Diagnosis Comes Too Late <span class="zh">通常的診斷來得太晚</span></h2>
+<p>A Dirac source is commonly regarded as a low-regularity approximation problem. The solution has a logarithmic singularity, so one studies weighted spaces, mesh grading, regularization, or specialized approximation near the pole.</p>
+<p class="zh">Dirac 源通常被視為低正則性的逼近問題。解在源點具有對數奇異性，因此人們自然會考慮加權空間、graded mesh、regularization，或源點附近的特殊逼近。</p>
+<div class="box">For a mixed method, the first obstruction occurs before approximation: the conservation equation cannot be paired with the scalar test space.<span class="zh">對混合方法而言，第一個障礙出現在逼近之前：守恆方程無法與純量測試空間配對。</span></div>
+<p>The defining feature of a mixed formulation is that the scalar variable is placed in a Lebesgue space, with no derivative imposed on it. But a Dirac measure is not represented by a locally integrable function and lies in the dual of no Lebesgue space.</p>
+</section>
+
+<section><h2>Why the Standard Mixed Formulation Fails <span class="zh">為什麼標準混合格式失效</span></h2>
+<p>Consider</p>
+<div class="equation"><span class="eqline">−∇·(<i>A</i>∇<i>u</i>) = <i>f</i><sub>1</sub> + δ<sub><i>x</i>₀</sub> in Ω,</span><span class="eqline"><i>u</i> = <i>g</i> on ∂Ω.</span></div>
+<p>With the physical flux σ<sub>phys</sub> := −<i>A</i>∇<i>u</i>, the conservation law is</p>
+<div class="equation"><span class="eqline">∇·σ<sub>phys</sub> = <i>f</i><sub>1</sub> + δ<sub><i>x</i>₀</sub>.</span></div>
+<p>A standard mixed method tests this equation against a scalar function in a Lebesgue space. The pairing with δ<sub><i>x</i>₀</sub> would require a point value at <i>x</i>₀, which a general Lebesgue function does not possess.</p>
+<div class="box">What fails is duality, not approximation. The failure occurs at the continuous level, before any mesh, finite element space, or convergence estimate is introduced.<span class="zh">真正失效的是對偶關係，而不是逼近。這個失效發生在連續層面，早於任何網格、有限元空間或收斂估計。</span></div>
+</section>
+
+<section><h2>Move the Measure out of the Conservation Law <span class="zh">把測度移出守恆方程</span></h2>
+<p>Choose the explicit field</p>
+<div class="equation"><span class="eqline"><i>f</i><sub>2</sub>(<i>x</i>) = (1/2π) (<i>x</i>−<i>x</i>₀)/|<i>x</i>−<i>x</i>₀|<sup>2</sup>,</span><span class="eqline">∇·<i>f</i><sub>2</sub> = δ<sub><i>x</i>₀</sub>.</span></div>
+<p>Then define the modified flux</p>
+<div class="equation"><span class="eqline">σ := −<i>A</i>∇<i>u</i> − <i>f</i><sub>2</sub>.</span></div>
+<p>The first-order system becomes</p>
+<div class="equation"><span class="eqline"><i>A</i><sup>−1</sup>σ + ∇<i>u</i> = −<i>A</i><sup>−1</sup><i>f</i><sub>2</sub>,</span><span class="eqline">∇·σ = <i>f</i><sub>1</sub>.</span></div>
+<p>The Dirac measure has disappeared from the conservation equation. The singular field remains only in the constitutive equation, where it is paired with a flux test function through ordinary <i>L</i><sup>p</sup>–<i>L</i><sup>p′</sup> duality.</p>
+<p class="zh">Dirac 測度已從守恆方程中消失。奇異場只留在本構方程中，在那裡它通過普通的 <i>L</i><sup>p</sup>–<i>L</i><sup>p′</sup> 對偶與通量測試函數配對。</p>
+<div class="box">A pairing that required continuity at one point has been replaced by a pairing that requires only integrability.<span class="zh">原本需要測試函數在一個點連續的配對，被替換成只需要可積性的配對。</span></div>
+</section>
+
+<section><h2>An Exact Reformulation, Not a Regularization <span class="zh">精確重寫，而不是正則化</span></h2>
+<p>Eliminating σ gives</p>
+<div class="equation"><span class="eqline">−∇·(<i>A</i>∇<i>u</i>) = <i>f</i><sub>1</sub> + ∇·<i>f</i><sub>2</sub>.</span></div>
+<p>This is exactly the original equation because ∇·<i>f</i><sub>2</sub> = δ<sub><i>x</i>₀</sub>. No parameter is introduced, no datum is perturbed, and no discrete delta is constructed.</p>
+<div class="comparison"><div class="card"><strong>Regularization route</strong>Replace the Dirac source by a computable approximation and carry the data perturbation through the analysis.</div><div class="card"><strong>Divergence-splitting route</strong>Keep the datum exact, rewrite it in divergence form, and absorb the difficulty into the flux norm.</div></div>
+<ul><li><i>f</i><sub>2</sub> depends only on the source point <i>x</i>₀, not on the coefficient <i>A</i>.</li><li>No coefficient-dependent singular solution is required.</li><li>Only the load vector changes; the RT0–P0 matrix remains the standard one.</li><li>The source point may lie anywhere relative to the mesh, including at a vertex.</li></ul>
+</section>
+
+<section><h2>The Splitting Is Not Specific to Mixed Methods <span class="zh">這個分解並不只適用於混合方法</span></h2>
+<p>The divergence-form splitting is a reformulation of the differential equation itself, not a device tied to RT0–P0 or to any particular mixed discretization. Once</p>
+<div class="equation"><span class="eqline">δ<sub><i>x</i>₀</sub> = ∇·<i>f</i><sub>2</sub></span></div>
+<p>is inserted, the original measure-data problem is rewritten exactly as an elliptic problem with prescribed divergence-form data generated by an <i>L</i><sup>p</sup> field:</p>
+<div class="equation"><span class="eqline">−∇·(<i>A</i>∇<i>u</i>) = <i>f</i><sub>1</sub> + ∇·<i>f</i><sub>2</sub>.</span></div>
+<p>This rewritten equation is available before any discretization is selected. Each numerical method can therefore use its own formulation and analysis for divergence-form data.</p>
+<p class="zh">散度型分解是對微分方程本身的重新表述，不是依附於 RT0–P0 或某一種混合離散的技巧。原來的測度數據問題被精確地重寫成由 <i>L</i><sup>p</sup> 向量場生成的 divergence-form data 問題；這一步發生在選擇任何離散方法之前。</p>
+<div class="comparison">
+  <div class="card"><strong>Mixed FEM</strong>Absorb <i>f</i><sub>2</sub> into the flux unknown. The conservation equation then has an ordinary Lebesgue-space right-hand side.</div>
+  <div class="card"><strong>Conforming FEM</strong>Use the exact weak action −(<i>f</i><sub>2</sub>,∇<i>v</i>). No point evaluation and no regularized delta are needed.</div>
+  <div class="card"><strong>Discontinuous Galerkin / HDG</strong>Insert the divergence-form load into the method's volume and numerical-flux structure, while leaving the datum exact.</div>
+  <div class="card"><strong>CR and other nonconforming methods</strong>Use the broken gradient pairing with <i>f</i><sub>2</sub>, together with the method's standard consistency treatment.</div>
+  <div class="card"><strong>Finite volume methods</strong>Interpret the divergence lifting through flux balance over control volumes rather than through a discrete point source.</div>
+  <div class="card"><strong>Method-independent message</strong>The Dirac measure is replaced nowhere: it is represented exactly as the divergence of an explicit singular field.</div>
+</div>
+<div class="box">Mixed FEM motivates the modified-flux variable, but the divergence-form splitting belongs to the PDE and is available to conforming, DG, HDG, CR/nonconforming, and finite-volume discretizations.<span class="zh">混合有限元方法啟發了修正通量變量，但 divergence-form splitting 屬於 PDE 本身，同樣可供 conforming、DG、HDG、CR／非協調以及有限體積離散使用。</span></div>
+<p>The price paid after the splitting depends on the method. For the mixed method analyzed here, the modified flux may leave <i>L</i><sup>2</sup>, so the flux error must be studied in <i>L</i><sup>p</sup>, 1 &lt; <i>p</i> &lt; 2. Other methods must likewise use, or develop, the appropriate theory for <i>W</i><sup>−1,<i>p</i></sup> data in divergence form. What is universal is the exact reformulation; what is method-dependent is the subsequent stability and error analysis.</p>
+<p class="zh">分解之後付出的分析代價依賴於具體方法。本文對 mixed method 的分析中，修正通量可能離開 <i>L</i><sup>2</sup>，因而必須在 1 &lt; <i>p</i> &lt; 2 的 <i>L</i><sup>p</sup> 尺度分析通量誤差。其他方法也需要使用或建立各自對 divergence-form <i>W</i><sup>−1,<i>p</i></sup> 數據的理論。普遍適用的是精確重寫；依賴方法的是後續穩定性與誤差分析。</p>
+</section>
+
+<section><h2>Why the Analysis Leaves the Hilbert Scale <span class="zh">為什麼分析必須離開 Hilbert 尺度</span></h2>
+<p>In two dimensions, δ<sub><i>x</i>₀</sub> is not in <i>H</i><sup>−1</sup>(Ω). Equivalently, no square-integrable vector field can have divergence δ<sub><i>x</i>₀</sub>. The explicit lifting satisfies</p>
+<div class="equation"><span class="eqline"><i>f</i><sub>2</sub> ∈ <i>L</i><sup>p</sup>(Ω)<sup>2</sup> for every 1 &lt; <i>p</i> &lt; 2,</span><span class="eqline"><i>f</i><sub>2</sub> ∉ <i>L</i><sup>2</sup>(Ω)<sup>2</sup>.</span></div>
+<p>When the singular part of <i>f</i><sub>2</sub> is not cancelled by the operator-dependent physical flux, the modified flux has the same status:</p>
+<div class="equation"><span class="eqline">σ ∈ <i>L</i><sup>p</sup>(Ω)<sup>2</sup> for 1 &lt; <i>p</i> &lt; 2,</span><span class="eqline">σ ∉ <i>L</i><sup>2</sup>(Ω)<sup>2</sup>.</span></div>
+<div class="box">The discrete method remains the classical RT0–P0 method. The exponent <i>p</i> enters the error analysis, not the algebraic system.<span class="zh">離散方法仍然是經典的 RT0–P0 方法。指數 <i>p</i> 只進入誤差分析，不進入代數系統。</span></div>
+</section>
+
+<section><h2>A Sharp Local Barrier <span class="zh">源點單元上的尖銳障礙</span></h2>
+<p>For a nonzero homogeneous |<i>x</i>−<i>x</i>₀|<sup>−1</sup> leading term, no RT0 field can approximate the singular flux on the pole element better than</p>
+<div class="equation"><span class="eqline">inf<sub>τ<sub><i>h</i></sub>∈RT0</sub> ‖σ−τ<sub><i>h</i></sub>‖<sub><i>L</i><sup>p</sup></sub> ≃ <i>h</i><sup>2/<i>p</i>−1</sup>.</span></div>
+<p>The matching lower bound already comes from the single element carrying the pole. It is a property of the singularity and the local approximation space, not an artifact of the proof or the numerical method.</p>
+<p class="zh">相同階的下界只由包含源點的單一單元就已經決定。這是奇異性與局部逼近空間的性質，不是證明技巧或數值方法造成的假象。</p>
+<div class="box">On a quasi-uniform mesh, the flux rate is decided by one element.<span class="zh">在準一致網格上，通量收斂率由一個單元決定。</span></div>
+</section>
+
+<section><h2>Grading Removes the Barrier <span class="zh">網格分級突破局部障礙</span></h2>
+<p>The barrier is local, so the remedy is local. Refining toward the pole and balancing the local contributions restores the first-order complexity of the lowest-order space:</p>
+<div class="equation"><span class="eqline">‖σ−σ<sub><i>h</i></sub>‖<sub><i>L</i><sup>p</sup>(Ω)</sub> = O(<i>N</i><sup>−1/2</sup>).</span></div>
+<div class="chain"><span class="eqline">one pole element fixes the quasi-uniform rate</span><span class="eqline">↓</span><span class="eqline">shrink the pole scale and grade outward</span><span class="eqline">↓</span><span class="eqline"><strong>recover first-order complexity</strong></span></div>
+<p>The scalar variable behaves differently. Under dual regularity, the mixed discretization component is first order, while the total scalar error is asymptotically the best piecewise-constant approximation of the logarithmic potential:</p>
+<div class="equation"><span class="eqline">‖<i>u</i>−<i>u</i><sub><i>h</i></sub>‖<sub><i>L</i><sup>2</sup>(Ω)</sub> ≃ <i>h</i>|log <i>h</i>|<sup>1/2</sup>.</span></div>
+</section>
+
+<section><h2>A Computable <i>L</i><sup>p</sup> Estimator <span class="zh">可計算的 <i>L</i><sup>p</sup> 誤差估計</span></h2>
+<p>A residual norm equivalence in the Lebesgue scale yields a computable estimator for the augmented flux–potential pair. For the pure Dirac problem, the conservation residual is zero and the estimator reduces to the constitutive residual.</p>
+<p class="zh">Lebesgue 尺度上的殘差範數等價性給出 augmented flux–potential pair 的可計算估計量。對純 Dirac 問題，守恆殘差為零，估計量只剩本構殘差。</p>
+<ul><li>Reliable for the mixed flux.</li><li>Locally efficient for the augmented flux–potential pair.</li><li>No bubble functions.</li><li>No jump terms.</li><li>No flux reconstruction.</li></ul>
+</section>
+
+<section><h2>The Conceptual Chain <span class="zh">概念鏈條</span></h2>
+<div class="chain"><span class="eqline">Dirac source in the conservation law</span><span class="eqline">↓</span><span class="eqline">failure of duality in the scalar Lebesgue test space</span><span class="eqline">↓</span><span class="eqline">exact divergence-form splitting</span><span class="eqline">↓</span><span class="eqline">standard mixed system with a modified flux</span><span class="eqline">↓</span><span class="eqline"><i>L</i><sup>p</sup> analysis below the Hilbert exponent</span></div>
+<div class="box">For mixed FEM the formulation is repaired by changing the flux unknown; more generally, the PDE is repaired for numerical use by rewriting the datum in exact divergence form, not by changing the mesh or perturbing the Dirac source.<span class="zh">這個格式是通過改變未知量修復的，而不是通過改變網格，也不是通過擾動數據。</span></div>
+</section>
+
+<section><h2>Core Paper <span class="zh">核心論文</span></h2>
+<div class="paper"><p class="paper-title">Mixed Finite Element Methods for a Dirac Source: Divergence-Form Splitting and <i>L</i><sup>p</sup> Error Analysis</p><p>Yueyao Wu and Shun Zhang, 2026.</p><p class="links"><a href="https://arxiv.org/abs/2608.17575" target="_blank" rel="noopener noreferrer">arXiv</a> · <a href="https://arxiv.org/pdf/2608.17575" target="_blank" rel="noopener noreferrer">PDF</a> · <a href="https://doi.org/10.48550/arXiv.2608.17575" target="_blank" rel="noopener noreferrer">DOI</a></p></div>
+</section>
+<footer>© Shun Zhang</footer>
+</main></body></html>
