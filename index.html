@@ -21,8 +21,9 @@
 
     body {
       display: grid;
-      place-items: center;
-      padding: 2rem;
+      justify-items: center;
+      align-items: start;
+      padding: clamp(3.5rem, 10vh, 7rem) 2rem 5rem;
       background: #ffffff;
       color: #171717;
       font-family: Georgia, "Times New Roman", serif;
@@ -89,6 +90,58 @@
       user-select: none;
     }
 
+    .content {
+      width: min(100%, 720px);
+      margin: 4rem auto 0;
+      text-align: left;
+    }
+
+    section + section {
+      margin-top: 3rem;
+    }
+
+    h2 {
+      margin: 0 0 1rem;
+      font-size: clamp(1.45rem, 3vw, 1.8rem);
+      font-weight: 500;
+      line-height: 1.3;
+    }
+
+    h2 .zh {
+      margin-left: 0.45rem;
+      font-family: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+      font-size: 0.78em;
+      font-weight: 400;
+      color: #555555;
+    }
+
+    .research-text {
+      margin: 0;
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: #303030;
+    }
+
+    .research-text.zh {
+      margin-top: 0.85rem;
+      font-family: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+      color: #4a4a4a;
+    }
+
+    .featured-list {
+      margin: 0;
+      padding-left: 1.3rem;
+      font-size: 1.05rem;
+      line-height: 1.9;
+      color: #303030;
+    }
+
+    .featured-list .zh {
+      margin-left: 0.4rem;
+      font-family: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+      color: #666666;
+    }
+
     @media (max-width: 520px) {
       nav {
         flex-direction: column;
@@ -121,6 +174,29 @@
       <a href="https://github.com/shunzhang-math"
          target="_blank" rel="noopener noreferrer">GitHub</a>
     </nav>
+
+    <div class="content">
+      <section aria-labelledby="research-interests">
+        <h2 id="research-interests">Research Interests <span class="zh" lang="zh-Hant">研究興趣</span></h2>
+        <p class="research-text">
+          My research focuses on finite element methods, particularly least-squares and mixed formulations, adaptive algorithms, singular-source and interface problems, reduced-order modeling, and scientific machine learning.
+        </p>
+        <p class="research-text zh" lang="zh-Hant">
+          我的研究聚焦於有限元方法，尤其是最小二乘與混合格式、自適應算法、奇異源與界面問題、降階建模，以及科學機器學習。
+        </p>
+      </section>
+
+      <section aria-labelledby="featured-research">
+        <h2 id="featured-research">Featured Research <span class="zh" lang="zh-Hant">代表性研究</span></h2>
+        <ul class="featured-list">
+          <li>Least-squares finite element methods <span class="zh" lang="zh-Hant">最小二乘有限元方法</span></li>
+          <li>Singular-source problems <span class="zh" lang="zh-Hant">奇異源問題</span></li>
+          <li>Reduced basis methods <span class="zh" lang="zh-Hant">降階基方法</span></li>
+          <li>Gibbs phenomena <span class="zh" lang="zh-Hant">Gibbs 現象</span></li>
+          <li>Neural de Rham approximation <span class="zh" lang="zh-Hant">神經 de Rham 逼近</span></li>
+        </ul>
+      </section>
+    </div>
   </main>
 </body>
 </html>
