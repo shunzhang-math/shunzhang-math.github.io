@@ -142,6 +142,21 @@
       color: #666666;
     }
 
+    .featured-question {
+      display: block;
+      margin-top: 0.3rem;
+      font-size: 0.96rem;
+      line-height: 1.55;
+      color: #333333;
+    }
+
+    .featured-question.zh {
+      margin-top: 0.05rem;
+      margin-left: 0;
+      font-weight: 600;
+      color: #555555;
+    }
+
     @media (max-width: 520px) {
       nav {
         flex-direction: column;
@@ -192,7 +207,11 @@
           <li>Least-squares finite element methods <span class="zh" lang="zh-Hant">最小二乘有限元方法</span></li>
           <li>Singular-source problems <span class="zh" lang="zh-Hant">奇異源問題</span></li>
           <li>Reduced basis methods <span class="zh" lang="zh-Hant">降階基方法</span></li>
-          <li>Gibbs phenomena <span class="zh" lang="zh-Hant">Gibbs 現象</span></li>
+          <li class="featured-gibbs">
+            <a href="gibbs.html">Gibbs phenomena</a> <span class="zh" lang="zh-Hant">Gibbs 現象</span>
+            <strong class="featured-question">Did the Method Really Resolve the Gibbs Phenomenon?</strong>
+            <strong class="featured-question zh" lang="zh-Hant">這個方法真的解決了 Gibbs 現象嗎？</strong>
+          </li>
           <li>Neural de Rham approximation <span class="zh" lang="zh-Hant">神經 de Rham 逼近</span></li>
         </ul>
       </section>
