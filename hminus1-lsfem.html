@@ -1,395 +1,249 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="generator" content="pandoc" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <meta name="description" content="Least-squares finite element methods for elliptic problems with H^{-1} right-hand sides and mixed boundary conditions." />
-  <title>LSFEM with H^{-1} Right-Hand Sides | Shun Zhang</title>
-  <style>
-    html {
-      color: #1a1a1a;
-      background-color: #fdfdfd;
-    }
-    body {
-      margin: 0 auto;
-      max-width: 36em;
-      padding-left: 50px;
-      padding-right: 50px;
-      padding-top: 50px;
-      padding-bottom: 50px;
-      hyphens: auto;
-      overflow-wrap: break-word;
-      text-rendering: optimizeLegibility;
-      font-kerning: normal;
-    }
-    @media (max-width: 600px) {
-      body {
-        font-size: 0.9em;
-        padding: 12px;
-      }
-      h1 {
-        font-size: 1.8em;
-      }
-    }
-    @media print {
-      html {
-        background-color: white;
-      }
-      body {
-        background-color: transparent;
-        color: black;
-        font-size: 12pt;
-      }
-      p, h2, h3 {
-        orphans: 3;
-        widows: 3;
-      }
-      h2, h3, h4 {
-        page-break-after: avoid;
-      }
-    }
-    p {
-      margin: 1em 0;
-    }
-    a {
-      color: #1a1a1a;
-    }
-    a:visited {
-      color: #1a1a1a;
-    }
-    img {
-      max-width: 100%;
-    }
-    svg {
-      height: auto;
-      max-width: 100%;
-    }
-    h1, h2, h3, h4, h5, h6 {
-      margin-top: 1.4em;
-    }
-    h5, h6 {
-      font-size: 1em;
-      font-style: italic;
-    }
-    h6 {
-      font-weight: normal;
-    }
-    ol, ul {
-      padding-left: 1.7em;
-      margin-top: 1em;
-    }
-    li > ol, li > ul {
-      margin-top: 0;
-    }
-    blockquote {
-      margin: 1em 0 1em 1.7em;
-      padding-left: 1em;
-      border-left: 2px solid #e6e6e6;
-      color: #606060;
-    }
-    code {
-      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
-      font-size: 85%;
-      margin: 0;
-      hyphens: manual;
-    }
-    pre {
-      margin: 1em 0;
-      overflow: auto;
-    }
-    pre code {
-      padding: 0;
-      overflow: visible;
-      overflow-wrap: normal;
-    }
-    .sourceCode {
-     background-color: transparent;
-     overflow: visible;
-    }
-    hr {
-      border: none;
-      border-top: 1px solid #1a1a1a;
-      height: 1px;
-      margin: 1em 0;
-    }
-    table {
-      margin: 1em 0;
-      border-collapse: collapse;
-      width: 100%;
-      overflow-x: auto;
-      display: block;
-      font-variant-numeric: lining-nums tabular-nums;
-    }
-    table caption {
-      margin-bottom: 0.75em;
-    }
-    tbody {
-      margin-top: 0.5em;
-      border-top: 1px solid #1a1a1a;
-      border-bottom: 1px solid #1a1a1a;
-    }
-    th {
-      border-top: 1px solid #1a1a1a;
-      padding: 0.25em 0.5em 0.25em 0.5em;
-    }
-    td {
-      padding: 0.125em 0.5em 0.25em 0.5em;
-    }
-    header {
-      margin-bottom: 4em;
-      text-align: center;
-    }
-    #TOC li {
-      list-style: none;
-    }
-    #TOC ul {
-      padding-left: 1.3em;
-    }
-    #TOC > ul {
-      padding-left: 0;
-    }
-    #TOC a:not(:hover) {
-      text-decoration: none;
-    }
-    code{white-space: pre-wrap;}
-    span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
-    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    /* The extra [class] is a hack that increases specificity enough to
-       override a similar rule in reveal.js */
-    ul.task-list[class]{list-style: none;}
-    ul.task-list li input[type="checkbox"] {
-      font-size: inherit;
-      width: 0.8em;
-      margin: 0 0.8em 0.2em -1.6em;
-      vertical-align: middle;
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="An exact divergence-form treatment of H^{-1} loads, four data channels, mixed boundary conditions, and H(div) × H1 least-squares formulations.">
+<title>H^{-1} Data and L^2-Residual LSFEM | Shun Zhang</title>
+<style>
+:root{color-scheme:light}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#fff;color:#202020;font:18px/1.72 Georgia,"Times New Roman",serif;-webkit-font-smoothing:antialiased}
+a{color:#174f86;text-underline-offset:.13em}
+a:hover{color:#0c345c}
+a:focus-visible{outline:2px solid #174f86;outline-offset:3px}
+.page{width:min(100% - 2.5rem,850px);margin:auto;padding:2.2rem 0 5rem}
+.home{display:inline-block;font:15px/1.5 Arial,Helvetica,sans-serif;text-decoration:none}
+header{margin:0}
+h1{margin:3.2rem 0 .45rem;font-size:clamp(2.25rem,6.3vw,4.5rem);font-weight:500;line-height:1.12;overflow-wrap:break-word}
+.zh-title{margin:0;color:#555;font-size:clamp(1.15rem,2.65vw,1.55rem);letter-spacing:.02em}
+.zh-title p{margin:0}
+.lead{margin:2rem 0 0;font-size:1.27rem;line-height:1.6}
+.lead p{margin:0}
+.lead.zh{margin-top:.8rem}
+.zh{font-family:"Noto Serif TC","Songti TC","PMingLiU",serif;color:#555}
+section{margin-top:3.7rem}
+h2{margin:0 0 1.25rem;padding-bottom:.45rem;border-bottom:1px solid #ddd;font-size:clamp(1.45rem,3.2vw,1.7rem);font-weight:500;line-height:1.4}
+h2 .zh{font-size:.76em}
+h3{font-size:1.15rem;font-weight:600;margin-top:2rem}
+p{margin:1.05rem 0}
+ul,ol{padding-left:1.45rem}
+li{margin:.62rem 0}
+.box{margin:1.55rem 0;padding:1.2rem 1.4rem;border-left:4px solid #174f86;background:#f6f8fa;font-size:1.08rem}
+.box>p:first-child{margin-top:0}
+.box>p:last-child{margin-bottom:0}
+.box .zh{display:block;margin-top:.7rem}
+.box .zh p{margin:.35rem 0 0}
+.equation,.formula{max-width:100%;overflow-x:auto;margin:1.4rem 0;padding:1rem 1.1rem;text-align:center;font-size:1.08rem;line-height:1.9}
+.equation math[display="block"],.formula math[display="block"]{margin:.1rem auto}
+.eqline{display:block;white-space:nowrap}
+.chain{margin:1.5rem 0;padding:1.3rem;border:1px solid #d9dfe5;background:#fbfcfd;text-align:center}
+.chain>p{margin:.45rem 0}
+.comparison{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:1.5rem 0}
+.card{min-width:0;padding:1.2rem;border:1px solid #ddd;background:#fcfcfc}
+.card p{margin:.5rem 0}
+.card strong{display:block;margin-bottom:.35rem}
+.paper{padding:1.35rem;border:1px solid #ddd;background:#fcfcfc}
+.paper p{margin:.5rem 0}
+.paper-title{font-weight:700}
+.links{font:15px/1.8 Arial,Helvetica,sans-serif}
+.figure-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.15rem;margin:1.7rem 0}
+.mesh-figure{margin:0}
+.mesh-figure img{display:block;width:100%;height:auto;border:1px solid #d4d8dc;background:#f3f6f8}
+.mesh-figure figcaption{margin-top:.65rem;font:15px/1.5 Arial,Helvetica,sans-serif;color:#4d4d4d}
+.mesh-figure figcaption .zh{display:block;margin-top:.25rem;font-size:.95em}
+.single-figure{width:min(100%,650px);margin:1.7rem auto}
+.terms{display:flex;flex-wrap:wrap;gap:.5rem}
+.term{padding:.3rem .6rem;border:1px solid #d8dce2;border-radius:999px;background:#fafbfc;font:14px Arial,Helvetica,sans-serif}
+footer{margin-top:5rem;border-top:1px solid #ddd;padding-top:1rem;color:#777;font:14px Arial,Helvetica,sans-serif}
+.cross-link{padding:1rem 1.2rem;background:#fafbfc;border:1px solid #e3e7eb}
+@media(max-width:620px){body{font-size:17px}.page{width:min(100% - 2rem,850px);padding-top:1.3rem}.comparison,.figure-grid{grid-template-columns:1fr}.equation,.formula{padding:.8rem .2rem;font-size:1rem}.box{padding:1rem 1.05rem}h1{margin-top:2.1rem;font-size:clamp(2.05rem,8vw,3.5rem)}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
 </head>
 <body>
-<header id="title-block-header">
-<h1 class="title">LSFEM with H^{-1} Right-Hand Sides | Shun Zhang</h1>
-</header>
-<div class="page" role="main">
-<a href="index.html" class="home">← Shun Zhang</a>
-<h1 id="do-we-really-need-an-hminus1-norm-lsfem">Do We Really Need an <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>H</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup></math>-Norm LSFEM?</h1>
-<p class="zh-title zh">我們真的需要 <i>H</i><sup>-1</sup>-範數 LSFEM 嗎？</p>
-<p class="lead"><strong>No.</strong> A divergence splitting of the data restores a standard <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>L</mi><mn>2</mn></msup></math>-residual first-order system.</p>
-<p class="lead zh"><strong>不需要。</strong>對數據作散度分解，就可以恢復一個標準的 <i>L</i><sup>2</sup>-殘差一階系統。</p>
-<h2 id="the-conventional-view-and-the-divergence-splitting">The Conventional View and the Divergence Splitting <span class="zh">傳統觀點與散度分解</span></h2>
-<p>First-order system least-squares finite element methods are usually understood as methods on the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>L</mi><mn>2</mn></msup></math>-scale: the first-order equations are measured by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>L</mi><mn>2</mn></msup></math> residuals. From this viewpoint, an <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>H</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup></math> right-hand side appears to require an <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>H</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup></math>-norm least-squares formulation, as in the negative-norm least-squares approach associated with Bramble and related work.</p>
-<p class="zh">一階系統最小二乘有限元方法通常被理解為 <i>L</i><sup>2</sup>-scale 上的方法：一階方程的殘差都在 <i>L</i><sup>2</sup> 中度量。按照這個思路，若右端項只屬於 <i>H</i><sup>-1</sup>，似乎就必須把 least-squares residual 改到 <i>H</i><sup>-1</sup> norm 中，這正是 Bramble 等人的 negative-norm least-squares 路線。</p>
-<div class="box">That change of norm is not necessary. The standard <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>L</mi><mn>2</mn></msup></math>-based LSFEM can be retained if the data are split correctly.<span class="zh">不需要改變殘差範數。只要正確分解數據，就可以完整保留標準的 <i>L</i><sup>2</sup>-based LSFEM。</span></div>
-<p>Write the right-hand side in divergence-split form</p>
-<div class="formula"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>=</mo><msub><mi>f</mi><mn>1</mn></msub><mo>−</mo><mo>∇</mo><mo>⋅</mo><msub><mi>f</mi><mn>2</mn></msub><mo>,</mo><mspace width="1em"/><msub><mi>f</mi><mn>1</mn></msub><mo>∈</mo><msup><mi>L</mi><mn>2</mn></msup><mo>,</mo><mspace width="1em"/><msub><mi>f</mi><mn>2</mn></msub><mo>∈</mo><msup><mi>L</mi><mn>2</mn></msup><msup><mrow><mo>(</mo><mi>Ω</mi><mo>)</mo></mrow><mi>d</mi></msup><mo>.</mo></math></div>
-<p>The divergence part is then absorbed into the flux variable. After this change of variable, both first-order equations again have <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>L</mi><mn>2</mn></msup></math> residuals. Thus the difficulty is resolved by a structural reformulation, not by replacing the least-squares norm.</p>
-<p class="zh">把右端項寫成 divergence splitting，然後把散度部分吸收到通量變量中。經過這個變量重定義後，兩個一階方程重新都具有 <i>L</i><sup>2</sup> 殘差。因此，問題是通過結構性的重新表述解決的，而不是通過更換 least-squares norm 解決的。</p>
-<div class="box">The key idea is not an <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>H</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup></math>-norm LSFEM, but an <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>H</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup></math>-data splitting that restores an <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>L</mi><mn>2</mn></msup></math>-residual first-order system.<span class="zh">關鍵不是構造 <i>H</i><sup>-1</sup>-norm LSFEM，而是對 <i>H</i><sup>-1</sup> 數據作分解，從而恢復一個具有 <i>L</i><sup>2</sup> 殘差的一階系統。</span></div>
-<h2 id="the-mixed-boundary-problem-混合邊界值問題">The Mixed-Boundary
-Problem <span class="zh">混合邊界值問題</span></h2>
-<p>Consider a general second-order elliptic problem whose right-hand
-side is represented by an
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math>
-scalar part and the distributional divergence of an
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math>
-vector field:</p>
-<div class="formula">
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>∇</mi><mspace width="-0.167em"></mspace><mo>⋅</mo><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mi>∇</mi><mi>u</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mi>b</mi><mo>⋅</mo><mi>∇</mi><mi>u</mi><mo>+</mo><mi>c</mi><mi>u</mi><mo>=</mo><msub><mi>f</mi><mn>1</mn></msub><mo>−</mo><mi>∇</mi><mspace width="-0.167em"></mspace><mo>⋅</mo><msub><mi>f</mi><mn>2</mn></msub><mspace width="1.0em"></mspace><mrow><mtext mathvariant="normal">in </mtext><mspace width="0.333em"></mspace></mrow><mi mathvariant="normal">Ω</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">
-      -\nabla\!\cdot(A\nabla u)+b\cdot\nabla u+cu
-      = f_1-\nabla\!\cdot f_2 \quad\text{in }\Omega,
-    </annotation></semantics></math>
+<main class="page">
+<p><a class="home" href="index.html">← Shun Zhang</a></p>
+<h1 id="do-we-really-need-an-h-1-norm-lsfem">Do We Really Need an <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>H</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><annotation encoding="application/x-tex">H^{-1}</annotation></semantics></math>-Norm LSFEM?</h1>
+<div class="zh-title zh">
+<p>我們真的需要 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>H</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><annotation encoding="application/x-tex">H^{-1}</annotation></semantics></math>-範數 LSFEM 嗎？</p>
 </div>
-<div class="formula">
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo>=</mo><mi>ϕ</mi><mspace width="1.0em"></mspace><mrow><mtext mathvariant="normal">on </mtext><mspace width="0.333em"></mspace></mrow><msub><mi mathvariant="normal">Γ</mi><mi>D</mi></msub><mo>,</mo><mspace width="2.0em"></mspace><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mi>A</mi><mi>∇</mi><mi>u</mi><mo>−</mo><msub><mi>f</mi><mn>2</mn></msub><mo stretchy="false" form="postfix">)</mo><mo>⋅</mo><mi>n</mi><mo>=</mo><mi>ψ</mi><mspace width="1.0em"></mspace><mrow><mtext mathvariant="normal">on </mtext><mspace width="0.333em"></mspace></mrow><msub><mi mathvariant="normal">Γ</mi><mi>N</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
-      u=\phi \quad\text{on }\Gamma_D,
-      \qquad
-      (-A\nabla u-f_2)\cdot n=\psi \quad\text{on }\Gamma_N.
-    </annotation></semantics></math>
+<div class="lead">
+<p><strong>Not for divergence-form <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>H</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><annotation encoding="application/x-tex">H^{-1}</annotation></semantics></math> data.</strong> A modified flux restores a standard <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math>-residual first-order system, without replacing the least-squares norm.</p>
 </div>
-<p>考慮一般二階橢圓問題。右端項由一個
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math>
-純量部分與一個
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math>
-向量場的分佈散度組成，並配以 Dirichlet-Neumann 混合邊界條件。</p>
-<p>With
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mn>1</mn></msub><mo>∈</mo><msup><mi>L</mi><mn>2</mn></msup><mo stretchy="false" form="prefix">(</mo><mi mathvariant="normal">Ω</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f_1\in L^2(\Omega)</annotation></semantics></math>
-and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mn>2</mn></msub><mo>∈</mo><msup><mi>L</mi><mn>2</mn></msup><mo stretchy="false" form="prefix">(</mo><mi mathvariant="normal">Ω</mi><msup><mo stretchy="false" form="postfix">)</mo><mi>d</mi></msup></mrow><annotation encoding="application/x-tex">f_2\in L^2(\Omega)^d</annotation></semantics></math>,
-the full right-hand side belongs naturally to
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>H</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><annotation encoding="application/x-tex">H^{-1}</annotation></semantics></math>.
-The divergence of
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>f</mi><mn>2</mn></msub><annotation encoding="application/x-tex">f_2</annotation></semantics></math>
-need not be an
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math>
-function.</p>
-<h2 id="why-the-gradient-flux-may-fail-為什麼梯度通量可能失效">Why the
-Gradient Flux May Fail <span
-class="zh">為什麼梯度通量可能失效</span></h2>
-<p>The usual gradient flux
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>A</mi><mi>∇</mi><mi>u</mi></mrow><annotation encoding="application/x-tex">-A\nabla u</annotation></semantics></math>
-belongs to
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>L</mi><mn>2</mn></msup><mo stretchy="false" form="prefix">(</mo><mi mathvariant="normal">Ω</mi><msup><mo stretchy="false" form="postfix">)</mo><mi>d</mi></msup></mrow><annotation encoding="application/x-tex">L^2(\Omega)^d</annotation></semantics></math>,
-but its divergence may exist only in
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>H</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi mathvariant="normal">Ω</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">H^{-1}(\Omega)</annotation></semantics></math>.
-Hence, in general,</p>
-<div class="formula">
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>A</mi><mi>∇</mi><mi>u</mi><mo>∉</mo><mi>H</mi><mo stretchy="false" form="prefix">(</mo><mi>div</mi><mo>&#8289;</mo><mo>;</mo><mi mathvariant="normal">Ω</mi><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
-      -A\nabla u \notin H(\operatorname{div};\Omega).
-    </annotation></semantics></math>
+<div class="lead zh">
+<p><strong>對具有散度表示的 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>H</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><annotation encoding="application/x-tex">H^{-1}</annotation></semantics></math> 數據，不需要。</strong> 把數據中的散度部分吸收到通量變量後，仍可使用標準的 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math>-殘差一階最小二乘方法。</p>
 </div>
+<section><h2 id="the-starting-point-mixed-boundary-elliptic-problems-從混合邊界問題出發">The Starting Point: Mixed-Boundary Elliptic Problems <span class="zh">從混合邊界問題出發</span></h2>
+<p>Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Ω</mi><mo>⊂</mo><msup><mi>ℝ</mi><mi>d</mi></msup></mrow><annotation encoding="application/x-tex">\Omega\subset\mathbb R^d</annotation></semantics></math> be a bounded Lipschitz domain whose boundary is split into relatively open Dirichlet and Neumann parts <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Γ</mi><mi>D</mi></msub><annotation encoding="application/x-tex">\Gamma_D</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Γ</mi><mi>N</mi></msub><annotation encoding="application/x-tex">\Gamma_N</annotation></semantics></math>, with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">|</mo><msub><mi>Γ</mi><mi>D</mi></msub><mo stretchy="true" form="postfix">|</mo></mrow><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">|\Gamma_D|&gt;0</annotation></semantics></math>. Consider the sign convention used in our <strong>goal-oriented LSFEM paper</strong>:</p>
+<div class="equation">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mi>−</mi><mi>∇</mi><mspace width="-0.167em"></mspace><mo>⋅</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>A</mi><mi>∇</mi><mi>u</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mi>𝐛</mi><mspace width="-0.167em"></mspace><mo>⋅</mo><mi>∇</mi><mi>u</mi><mo>+</mo><mi>c</mi><mi>u</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msub><mi>f</mi><mn>1</mn></msub><mo>+</mo><mi>∇</mi><mspace width="-0.167em"></mspace><mo>⋅</mo><msub><mi>𝐟</mi><mn>2</mn></msub></mtd><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mrow><mtext mathvariant="normal">in </mtext><mspace width="0.333em"></mspace></mrow><mi>Ω</mi><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>u</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>ϕ</mi></mtd><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mrow><mtext mathvariant="normal">on </mtext><mspace width="0.333em"></mspace></mrow><msub><mi>Γ</mi><mi>D</mi></msub><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>−</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>A</mi><mi>∇</mi><mi>u</mi><mo>+</mo><msub><mi>𝐟</mi><mn>2</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>⋅</mo><mi>𝐧</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>ψ</mi></mtd><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mrow><mtext mathvariant="normal">on </mtext><mspace width="0.333em"></mspace></mrow><msub><mi>Γ</mi><mi>N</mi></msub><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+-\nabla\!\cdot(A\nabla u)+\mathbf b\!\cdot\nabla u+cu
+  &amp;=f_1+\nabla\!\cdot\mathbf f_2 &amp;&amp;\text{in }\Omega,\\
+u&amp;=\phi &amp;&amp;\text{on }\Gamma_D,\\
+-(A\nabla u+\mathbf f_2)\cdot\mathbf n
+  &amp;=\psi &amp;&amp;\text{on }\Gamma_N.
+\end{aligned}
+</annotation></semantics></math></p>
+</div>
+<p>Here <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mn>1</mn></msub><mo>∈</mo><msup><mi>L</mi><mn>2</mn></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>Ω</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">f_1\in L^2(\Omega)</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐟</mi><mn>2</mn></msub><mo>∈</mo><msup><mi>L</mi><mn>2</mn></msup><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>Ω</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>d</mi></msup></mrow><annotation encoding="application/x-tex">\mathbf f_2\in L^2(\Omega)^d</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ϕ</mi><mo>∈</mo><msup><mi>H</mi><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>Γ</mi><mi>D</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\phi\in H^{1/2}(\Gamma_D)</annotation></semantics></math>, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ψ</mi><mo>∈</mo><msup><mi>L</mi><mn>2</mn></msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>Γ</mi><mi>N</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\psi\in L^2(\Gamma_N)</annotation></semantics></math>. We take <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> symmetric and uniformly positive definite, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>,</mo><mi>𝐛</mi><mo>,</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">A,\mathbf b,c</annotation></semantics></math> bounded, and assume the mixed-boundary weak operator is an isomorphism on the homogeneous Dirichlet space. This includes well-posed problems with lower-order terms, not only coercive diffusion equations.</p>
+<div class="zh">
+<p>這裡 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>f</mi><mn>1</mn></msub><annotation encoding="application/x-tex">f_1</annotation></semantics></math> 是體積數據，<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐟</mi><mn>2</mn></msub><annotation encoding="application/x-tex">\mathbf f_2</annotation></semantics></math> 是梯度配對中的向量數據；<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ϕ</mi><annotation encoding="application/x-tex">\phi</annotation></semantics></math> 和 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ψ</mi><annotation encoding="application/x-tex">\psi</annotation></semantics></math> 分別是 Dirichlet 與 Neumann 邊界數據。假設相應的混合邊界弱問題適定。</p>
+</div>
+</section>
+<section>
+<h2 id="four-components-of-an-h1-functional">Four Contributions to an <i>H</i><sup>1</sup> Functional <span class="zh"><i>H</i><sup>1</sup> 線性泛函的四類數據</span></h2>
+<p>Volume and boundary data act on <i>H</i><sup>1</sup>(Ω) through scalar, gradient, Dirichlet-boundary, and Neumann-boundary terms:</p>
+<div class="equation">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℱ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>w</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>f</mi><mn>1</mn></msub><mo>,</mo><mi>w</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>Ω</mi></msub><mo>−</mo><msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>𝐟</mi><mn>2</mn></msub><mo>,</mo><mi>∇</mi><mi>w</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>Ω</mi></msub><mo>+</mo><mo stretchy="false" form="prefix">⟨</mo><msub><mi>h</mi><mi>D</mi></msub><mo>,</mo><mi>w</mi><msub><mo stretchy="false" form="postfix">⟩</mo><msub><mi>Γ</mi><mi>D</mi></msub></msub><mo>+</mo><mo stretchy="false" form="prefix">⟨</mo><msub><mi>h</mi><mi>N</mi></msub><mo>,</mo><mi>w</mi><msub><mo stretchy="false" form="postfix">⟩</mo><msub><mi>Γ</mi><mi>N</mi></msub></msub><mo>,</mo><mspace width="2.0em"></mspace><mi>w</mi><mo>∈</mo><msup><mi>H</mi><mn>1</mn></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>Ω</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathscr F(w)=(f_1,w)_\Omega-(\mathbf f_2,\nabla w)_\Omega
+  +\langle h_D,w\rangle_{\Gamma_D}
+  +\langle h_N,w\rangle_{\Gamma_N},\qquad w\in H^1(\Omega).
+</annotation></semantics></math></p>
+</div>
+<p class="zh">一個 <i>H</i><sup>1</sup>(Ω) 線性泛函可以包含四類數據：體積項 <i>f</i><sub>1</sub>、梯度項 <b>f</b><sub>2</sub>，以及 Dirichlet、Neumann 邊界上的跡配對。</p>
+<p>For the mixed-boundary problem above, let</p>
+<div class="equation">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>H</mi><mi>D</mi><mn>1</mn></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><mi>Ω</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>:=</mo><mo stretchy="false" form="prefix">{</mo><mi>w</mi><mo>∈</mo><msup><mi>H</mi><mn>1</mn></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>Ω</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>:</mo><mi>w</mi><msub><mrow><mo stretchy="true" form="prefix">|</mo><msub><mi></mi><msub><mi>Γ</mi><mi>D</mi></msub></msub><mo>=</mo><mn>0</mn><mo stretchy="false" form="postfix">}</mo><mo>,</mo><mspace width="1.0em"></mspace><mi>X</mi><mo>:=</mo><mo stretchy="false" form="prefix">{</mo><mi>w</mi><mo>∈</mo><msup><mi>H</mi><mn>1</mn></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>Ω</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>:</mo><mi>w</mi><mo stretchy="true" form="postfix">|</mo></mrow><msub><mi>Γ</mi><mi>D</mi></msub></msub><mo>=</mo><mi>ϕ</mi><mo stretchy="false" form="postfix">}</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
+H_D^1(\Omega):=\{w\in H^1(\Omega):w|_{\Gamma_D}=0\},\quad
+X:=\{w\in H^1(\Omega):w|_{\Gamma_D}=\phi\}.
+</annotation></semantics></math></p>
+</div>
+<p>The prescribed Dirichlet value fixes the trial space; the Neumann datum enters the weak right-hand side:</p>
+<div class="equation">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><menclose notation="box"><mrow><mo>ℓ</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>w</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>f</mi><mn>1</mn></msub><mo>,</mo><mi>w</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>Ω</mi></msub><mo>−</mo><msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>𝐟</mi><mn>2</mn></msub><mo>,</mo><mi>∇</mi><mi>w</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>Ω</mi></msub><mo>−</mo><mo stretchy="false" form="prefix">⟨</mo><mi>ψ</mi><mo>,</mo><mi>w</mi><msub><mo stretchy="false" form="postfix">⟩</mo><msub><mi>Γ</mi><mi>N</mi></msub></msub><mo>,</mo><mspace width="2.0em"></mspace><mi>w</mi><mo>∈</mo><msup><mi>H</mi><mn>1</mn></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>Ω</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow></menclose><annotation encoding="application/x-tex">
+\boxed{\ell(w)=(f_1,w)_\Omega-(\mathbf f_2,\nabla w)_\Omega
+-\langle\psi,w\rangle_{\Gamma_N},\qquad w\in H^1(\Omega).}
+</annotation></semantics></math></p>
+</div>
+<p>Find <i>u</i> ∈ <i>X</i><sub>p</sub> such that</p>
+<div class="equation">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>u</mi><mo>,</mo><msub><mi>w</mi><mn>0</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mo>ℓ</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>w</mi><mn>0</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="1.0em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><mo>∀</mo><msub><mi>w</mi><mn>0</mn></msub><mo>∈</mo><msubsup><mi>H</mi><mi>D</mi><mn>1</mn></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><mi>Ω</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mspace width="2.0em"></mspace><mi>a</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>u</mi><mo>,</mo><mi>w</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>A</mi><mi>∇</mi><mi>u</mi><mo>,</mo><mi>∇</mi><mi>w</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>Ω</mi></msub><mo>+</mo><msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝐛</mi><mspace width="-0.167em"></mspace><mo>⋅</mo><mi>∇</mi><mi>u</mi><mo>+</mo><mi>c</mi><mi>u</mi><mo>,</mo><mi>w</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>Ω</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+a(u,w_0)=\ell(w_0)\quad(\forall w_0\in H_D^1(\Omega)),\qquad
+a(u,w)=(A\nabla u,\nabla w)_\Omega+(\mathbf b\!\cdot\nabla u+cu,w)_\Omega.
+</annotation></semantics></math></p>
+</div>
+</section>
+<section><h2 id="why-the-unshifted-flux-may-fail-為什麼原來的梯度通量可能失效">Why the Unshifted Flux May Fail <span class="zh">為什麼原來的梯度通量可能失效</span></h2>
+<p>Because <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐟</mi><mn>2</mn></msub><annotation encoding="application/x-tex">\mathbf f_2</annotation></semantics></math> need only be in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math>, its distributional divergence need not lie in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math>. The conventional physical gradient flux <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>A</mi><mi>∇</mi><mi>u</mi></mrow><annotation encoding="application/x-tex">-A\nabla u</annotation></semantics></math> is square integrable, but may not belong to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mi mathvariant="normal">d</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">v</mi></mrow><mo>;</mo><mi>Ω</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">H(\mathrm{div};\Omega)</annotation></semantics></math>; its divergence still contains the non-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math> term <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>∇</mi><mspace width="-0.167em"></mspace><mo>⋅</mo><msub><mi>𝐟</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\nabla\!\cdot\mathbf f_2</annotation></semantics></math>.</p>
 <div class="box">
-An
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math>
-vector field is not automatically an
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mo stretchy="false" form="prefix">(</mo><mi>div</mi><mo>&#8289;</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">H(\operatorname{div})</annotation></semantics></math>
-flux. <span class="zh">一個
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math>
-向量場不會自動成為
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mo stretchy="false" form="prefix">(</mo><mi>div</mi><mo>&#8289;</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">H(\operatorname{div})</annotation></semantics></math>
-通量。</span>
+<p>The difficulty is <strong>not</strong> that the least-squares residual norm is too weak. It is that the unshifted flux is generally not in the function space required by the standard <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mi mathvariant="normal">d</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">v</mi></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>×</mo><msup><mi>H</mi><mn>1</mn></msup></mrow><annotation encoding="application/x-tex">H(\mathrm{div})\times H^1</annotation></semantics></math> formulation.</p>
+<div class="zh">
+<p>真正的問題不是 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math> 殘差範數太弱，而是未修正的梯度通量不一定屬於標準一階最小二乘格式所要求的 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mi mathvariant="normal">d</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">v</mi></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">H(\mathrm{div})</annotation></semantics></math> 空間。</p>
 </div>
-<p>這不是證明中的小技術問題。如果通量不屬於
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mo stretchy="false" form="prefix">(</mo><mi>div</mi><mo>&#8289;</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">H(\operatorname{div})</annotation></semantics></math>，以其散度作為
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math>
-殘差的標準一階最小二乘格式便沒有建立在正確的函數空間上。</p>
-<h2 id="absorb-the-data-into-the-flux-把數據吸收到通量中">Absorb the
-Data into the Flux <span class="zh">把數據吸收到通量中</span></h2>
-<p>The correct first-order variable is the shifted flux</p>
-<div class="formula">
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo>:=</mo><mi>−</mi><mi>A</mi><mi>∇</mi><mi>u</mi><mo>−</mo><msub><mi>f</mi><mn>2</mn></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
-      \sigma := -A\nabla u-f_2.
-    </annotation></semantics></math>
 </div>
-<p>Then the distributional part of the data disappears from the balance
-residual:</p>
-<div class="formula">
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo>+</mo><mi>A</mi><mi>∇</mi><mi>u</mi><mo>+</mo><msub><mi>f</mi><mn>2</mn></msub><mo>=</mo><mn>0</mn><mo>,</mo><mspace width="2.0em"></mspace><mi>∇</mi><mspace width="-0.167em"></mspace><mo>⋅</mo><mi>σ</mi><mo>+</mo><mi>b</mi><mo>⋅</mo><mi>∇</mi><mi>u</mi><mo>+</mo><mi>c</mi><mi>u</mi><mo>=</mo><msub><mi>f</mi><mn>1</mn></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
-      \sigma+A\nabla u+f_2=0,
-      \qquad
-      \nabla\!\cdot\sigma+b\cdot\nabla u+cu=f_1.
-    </annotation></semantics></math>
+</section>
+<section><h2 id="absorb-the-divergence-data-into-the-flux-把散度數據吸收到通量中">Absorb the Divergence Data into the Flux <span class="zh">把散度數據吸收到通量中</span></h2>
+<p>Define the <strong>shifted flux</strong></p>
+<div class="equation">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><menclose notation="box"><mrow><mi>𝛔</mi><mo>:=</mo><mi>−</mi><mi>A</mi><mi>∇</mi><mi>u</mi><mo>−</mo><msub><mi>𝐟</mi><mn>2</mn></msub><mi>.</mi></mrow></menclose><annotation encoding="application/x-tex">\boxed{\boldsymbol\sigma:=-A\nabla u-\mathbf f_2.}</annotation></semantics></math></p>
 </div>
-<p>Because the second right-hand side is now in
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math>,
-the shifted variable satisfies
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo>∈</mo><mi>H</mi><mo stretchy="false" form="prefix">(</mo><mi>div</mi><mo>&#8289;</mo><mo>;</mo><mi mathvariant="normal">Ω</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\sigma\in H(\operatorname{div};\Omega)</annotation></semantics></math>.</p>
+<p>Using the <strong>plus</strong> sign in the original PDE is essential: since</p>
+<div class="equation">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>∇</mi><mspace width="-0.167em"></mspace><mo>⋅</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>A</mi><mi>∇</mi><mi>u</mi><mo>+</mo><msub><mi>𝐟</mi><mn>2</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mi>𝐛</mi><mspace width="-0.167em"></mspace><mo>⋅</mo><mi>∇</mi><mi>u</mi><mo>+</mo><mi>c</mi><mi>u</mi><mo>=</mo><msub><mi>f</mi><mn>1</mn></msub><mo>,</mo></mrow><annotation encoding="application/x-tex">
+-\nabla\!\cdot(A\nabla u+\mathbf f_2)+\mathbf b\!\cdot\nabla u+cu=f_1,
+</annotation></semantics></math></p>
+</div>
+<p>the equations are exactly equivalent to</p>
+<div class="equation">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><menclose notation="box"><mtable><mtr><mtd columnalign="right" style="text-align: right"><mi>𝛔</mi><mo>+</mo><mi>A</mi><mi>∇</mi><mi>u</mi><mo>+</mo><msub><mi>𝐟</mi><mn>2</mn></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mn>0</mn><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>∇</mi><mspace width="-0.167em"></mspace><mo>⋅</mo><mi>𝛔</mi><mo>+</mo><mi>𝐛</mi><mspace width="-0.167em"></mspace><mo>⋅</mo><mi>∇</mi><mi>u</mi><mo>+</mo><mi>c</mi><mi>u</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msub><mi>f</mi><mn>1</mn></msub><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>u</mi><msub><mo stretchy="false" form="prefix">|</mo><msub><mi>Γ</mi><mi>D</mi></msub></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>ϕ</mi><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>𝛔</mi><mo>⋅</mo><mi>𝐧</mi><msub><mo stretchy="false" form="prefix">|</mo><msub><mi>Γ</mi><mi>N</mi></msub></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>ψ</mi><mi>.</mi></mtd></mtr></mtable></menclose><annotation encoding="application/x-tex">
+\boxed{\begin{aligned}
+\boldsymbol\sigma+A\nabla u+\mathbf f_2&amp;=0,\\
+\nabla\!\cdot\boldsymbol\sigma+\mathbf b\!\cdot\nabla u+cu&amp;=f_1,\\
+u|_{\Gamma_D}&amp;=\phi,\\
+\boldsymbol\sigma\cdot\mathbf n|_{\Gamma_N}&amp;=\psi.
+\end{aligned}}
+</annotation></semantics></math></p>
+</div>
+<p>Now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝛔</mi><mo>∈</mo><msup><mi>L</mi><mn>2</mn></msup><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>Ω</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>d</mi></msup></mrow><annotation encoding="application/x-tex">\boldsymbol\sigma\in L^2(\Omega)^d</annotation></semantics></math>, and</p>
+<div class="equation">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>∇</mi><mspace width="-0.167em"></mspace><mo>⋅</mo><mi>𝛔</mi><mo>=</mo><msub><mi>f</mi><mn>1</mn></msub><mo>−</mo><mi>𝐛</mi><mspace width="-0.167em"></mspace><mo>⋅</mo><mi>∇</mi><mi>u</mi><mo>−</mo><mi>c</mi><mi>u</mi><mo>∈</mo><msup><mi>L</mi><mn>2</mn></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>Ω</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">\nabla\!\cdot\boldsymbol\sigma=f_1-\mathbf b\!\cdot\nabla u-cu\in L^2(\Omega).</annotation></semantics></math></p>
+</div>
+<p>Therefore <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝛔</mi><mo>∈</mo><mi>H</mi><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mi mathvariant="normal">d</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">v</mi></mrow><mo>;</mo><mi>Ω</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\boldsymbol\sigma\in H(\mathrm{div};\Omega)</annotation></semantics></math>. This is an exact change of variable, not a regularization or approximation of the right-hand side.</p>
+<div class="zh">
+<p>因為 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐟</mi><mn>2</mn></msub><annotation encoding="application/x-tex">\mathbf f_2</annotation></semantics></math> 已被吸收到 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝛔</mi><annotation encoding="application/x-tex">\boldsymbol\sigma</annotation></semantics></math>，守恆方程的右端現在屬於 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math>，因此修正通量自然屬於 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mi mathvariant="normal">d</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">v</mi></mrow><mo>;</mo><mi>Ω</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">H(\mathrm{div};\Omega)</annotation></semantics></math>。這是完全等價的重寫，並沒有修改原始數據。</p>
+</div>
+</section>
+<section><h2 id="the-neumann-trace-must-be-the-shifted-flux-trace-neumann-條件必須施加在修正通量上">The Neumann Trace Must Be the Shifted-Flux Trace <span class="zh">Neumann 條件必須施加在修正通量上</span></h2>
+<p>The boundary condition is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝛔</mi><mo>⋅</mo><mi>𝐧</mi><mo>=</mo><mi>ψ</mi></mrow><annotation encoding="application/x-tex">\boldsymbol\sigma\cdot\mathbf n=\psi</annotation></semantics></math> on <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Γ</mi><mi>N</mi></msub><annotation encoding="application/x-tex">\Gamma_N</annotation></semantics></math> — <strong>not</strong> a separate condition on <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>A</mi><mi>∇</mi><mi>u</mi></mrow><annotation encoding="application/x-tex">-A\nabla u</annotation></semantics></math>. In the normal-trace sense, this means</p>
+<div class="equation">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝛔</mi><mo>,</mo><mi>∇</mi><msub><mi>w</mi><mn>0</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mi>Ω</mi></msub><mo>+</mo><msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>∇</mi><mspace width="-0.167em"></mspace><mo>⋅</mo><mi>𝛔</mi><mo>,</mo><msub><mi>w</mi><mn>0</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mi>Ω</mi></msub><mo>=</mo><mo stretchy="false" form="prefix">⟨</mo><mi>ψ</mi><mo>,</mo><msub><mi>w</mi><mn>0</mn></msub><msub><mo stretchy="false" form="postfix">⟩</mo><msub><mi>Γ</mi><mi>N</mi></msub></msub><mo>,</mo><mspace width="1.0em"></mspace><msub><mi>w</mi><mn>0</mn></msub><mo>∈</mo><msubsup><mi>H</mi><mi>D</mi><mn>1</mn></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><mi>Ω</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+(\boldsymbol\sigma,\nabla w_0)_\Omega+(\nabla\!\cdot\boldsymbol\sigma,w_0)_\Omega
+=\langle\psi,w_0\rangle_{\Gamma_N},\quad w_0\in H_D^1(\Omega).
+</annotation></semantics></math></p>
+</div>
+<p>For a flux lifting with this trace, define</p>
+<div class="equation">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Σ</mi><mo>:=</mo><mo stretchy="false" form="prefix">{</mo><mi>𝛕</mi><mo>∈</mo><mi>H</mi><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mi mathvariant="normal">d</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">v</mi></mrow><mo>;</mo><mi>Ω</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>:</mo><mi>𝛕</mi><mo>⋅</mo><mi>𝐧</mi><msub><mo stretchy="false" form="prefix">|</mo><msub><mi>Γ</mi><mi>N</mi></msub></msub><mo>=</mo><mi>ψ</mi><mo stretchy="false" form="postfix">}</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\Sigma:=\{\boldsymbol\tau\in H(\mathrm{div};\Omega):
+\boldsymbol\tau\cdot\mathbf n|_{\Gamma_N}=\psi\}.
+</annotation></semantics></math></p>
+</div>
+<p>Applying Green’s formula to the first-order system gives precisely</p>
+<div class="equation">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>u</mi><mo>,</mo><msub><mi>w</mi><mn>0</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>f</mi><mn>1</mn></msub><mo>,</mo><msub><mi>w</mi><mn>0</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mi>Ω</mi></msub><mo>−</mo><msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>𝐟</mi><mn>2</mn></msub><mo>,</mo><mi>∇</mi><msub><mi>w</mi><mn>0</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mi>Ω</mi></msub><mo>−</mo><mo stretchy="false" form="prefix">⟨</mo><mi>ψ</mi><mo>,</mo><msub><mi>w</mi><mn>0</mn></msub><msub><mo stretchy="false" form="postfix">⟩</mo><msub><mi>Γ</mi><mi>N</mi></msub></msub><mo>=</mo><mo>ℓ</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>w</mi><mn>0</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+a(u,w_0)=(f_1,w_0)_\Omega-(\mathbf f_2,\nabla w_0)_\Omega
+-\langle\psi,w_0\rangle_{\Gamma_N}=\ell(w_0).
+</annotation></semantics></math></p>
+</div>
+<p>Conversely, the weak equation identifies the normal trace of the shifted flux and recovers the first-order system. Thus <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo>∈</mo><mi>X</mi></mrow><annotation encoding="application/x-tex">u\in X</annotation></semantics></math> solves the mixed-boundary weak problem <strong>if and only if</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝛔</mi><mo>,</mo><mi>u</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>∈</mo><mi>Σ</mi><mo>×</mo><mi>X</mi></mrow><annotation encoding="application/x-tex">(\boldsymbol\sigma,u)\in\Sigma\times X</annotation></semantics></math> solves the shifted first-order system.</p>
+<div class="zh">
+<p>修正通量的定義、弱形式中的 Neumann 配對、以及 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mi mathvariant="normal">d</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">v</mi></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">H(\mathrm{div})</annotation></semantics></math> 正常跡，是同一個結構。</p>
+</div>
+</section>
+<section><h2 id="a-standard-l2-least-squares-functional-保留標準的-l2-最小二乘泛函">A Standard <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math> Least-Squares Functional <span class="zh">保留標準的 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math> 最小二乘泛函</span></h2>
+<p>There is now no reason to replace the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math> divergence residual by a negative norm. Minimize, over <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Σ</mi><mo>×</mo><mi>X</mi></mrow><annotation encoding="application/x-tex">\Sigma\times X</annotation></semantics></math>,</p>
+<div class="equation">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><menclose notation="box"><mtable><mtr><mtd columnalign="right" style="text-align: right"><mi>ℒ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝛕</mi><mo>,</mo><mi>v</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mrow></mrow></mtd><mtd columnalign="left" style="text-align: left"><mo minsize="1.2" maxsize="1.2" stretchy="false" form="postfix">∥</mo><msup><mi>A</mi><mrow><mi>−</mi><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝛕</mi><mo>+</mo><mi>A</mi><mi>∇</mi><mi>v</mi><mo>+</mo><msub><mi>𝐟</mi><mn>2</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><msubsup><mo minsize="1.2" maxsize="1.2" stretchy="false" form="postfix">∥</mo><mrow><msup><mi>L</mi><mn>2</mn></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>Ω</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mn>2</mn></msubsup></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mi>+</mi><mo minsize="1.2" maxsize="1.2" stretchy="false" form="postfix">∥</mo><mi>∇</mi><mspace width="-0.167em"></mspace><mo>⋅</mo><mi>𝛕</mi><mo>+</mo><mi>𝐛</mi><mspace width="-0.167em"></mspace><mo>⋅</mo><mi>∇</mi><mi>v</mi><mo>+</mo><mi>c</mi><mi>v</mi><mo>−</mo><msub><mi>f</mi><mn>1</mn></msub><msubsup><mo minsize="1.2" maxsize="1.2" stretchy="false" form="postfix">∥</mo><mrow><msup><mi>L</mi><mn>2</mn></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>Ω</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mn>2</mn></msubsup><mi>.</mi></mtd></mtr></mtable></menclose><annotation encoding="application/x-tex">
+\boxed{\begin{aligned}
+\mathcal L(\boldsymbol\tau,v)
+={}&amp;\big\|A^{-1/2}(\boldsymbol\tau+A\nabla v+\mathbf f_2)\big\|_{L^2(\Omega)}^2\\
+&amp;+\big\|\nabla\!\cdot\boldsymbol\tau+\mathbf b\!\cdot\nabla v+cv-f_1\big\|_{L^2(\Omega)}^2.
+\end{aligned}}
+</annotation></semantics></math></p>
+</div>
+<p>With boundary liftings, the error pair belongs to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>H</mi><mi>N</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mi mathvariant="normal">d</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">v</mi></mrow><mo>;</mo><mi>Ω</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>×</mo><msubsup><mi>H</mi><mi>D</mi><mn>1</mn></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><mi>Ω</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">H_N(\mathrm{div};\Omega)\times H_D^1(\Omega)</annotation></semantics></math>. Under the assumed isomorphism / inf–sup stability of the mixed-boundary elliptic operator, the homogeneous least-squares residuals satisfy the norm equivalence</p>
+<div class="equation">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>C</mi><mn>1</mn></msub><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">(</mo><mo stretchy="false" form="postfix">∥</mo><mi>𝛕</mi><msubsup><mo stretchy="false" form="postfix">∥</mo><mrow><mi>H</mi><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mi mathvariant="normal">d</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">v</mi></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mn>2</mn></msubsup><mi>+</mi><mo stretchy="false" form="postfix">∥</mo><mi>v</mi><msubsup><mo stretchy="false" form="postfix">∥</mo><msup><mi>H</mi><mn>1</mn></msup><mn>2</mn></msubsup><mo minsize="1.2" maxsize="1.2" stretchy="false" form="postfix">)</mo><mspace width="0.222em"></mspace></mtd><mtd columnalign="left" style="text-align: left"><mo>≤</mo><mo stretchy="false" form="postfix">∥</mo><msup><mi>A</mi><mrow><mi>−</mi><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝛕</mi><mo>+</mo><mi>A</mi><mi>∇</mi><mi>v</mi><mo stretchy="true" form="postfix">)</mo></mrow><msubsup><mo stretchy="false" form="postfix">∥</mo><msup><mi>L</mi><mn>2</mn></msup><mn>2</mn></msubsup></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mspace width="1.0em"></mspace><mi>+</mi><mo stretchy="false" form="postfix">∥</mo><mi>∇</mi><mspace width="-0.167em"></mspace><mo>⋅</mo><mi>𝛕</mi><mo>+</mo><mi>𝐛</mi><mspace width="-0.167em"></mspace><mo>⋅</mo><mi>∇</mi><mi>v</mi><mo>+</mo><mi>c</mi><mi>v</mi><msubsup><mo stretchy="false" form="postfix">∥</mo><msup><mi>L</mi><mn>2</mn></msup><mn>2</mn></msubsup></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>≤</mo><msub><mi>C</mi><mn>2</mn></msub><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">(</mo><mo stretchy="false" form="postfix">∥</mo><mi>𝛕</mi><msubsup><mo stretchy="false" form="postfix">∥</mo><mrow><mi>H</mi><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mi mathvariant="normal">d</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">v</mi></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mn>2</mn></msubsup><mi>+</mi><mo stretchy="false" form="postfix">∥</mo><mi>v</mi><msubsup><mo stretchy="false" form="postfix">∥</mo><msup><mi>H</mi><mn>1</mn></msup><mn>2</mn></msubsup><mo minsize="1.2" maxsize="1.2" stretchy="false" form="postfix">)</mo><mo>,</mo></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+C_1\big(\|\boldsymbol\tau\|_{H(\mathrm{div})}^2+\|v\|_{H^1}^2\big)
+\ &amp;\le \|A^{-1/2}(\boldsymbol\tau+A\nabla v)\|_{L^2}^2\\
+&amp;\quad+\|\nabla\!\cdot\boldsymbol\tau+\mathbf b\!\cdot\nabla v+cv\|_{L^2}^2\\
+&amp;\le C_2\big(\|\boldsymbol\tau\|_{H(\mathrm{div})}^2+\|v\|_{H^1}^2\big),
+\end{aligned}
+</annotation></semantics></math></p>
+</div>
+<p>for <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝛕</mi><mo>∈</mo><msub><mi>H</mi><mi>N</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mi mathvariant="normal">d</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">v</mi></mrow><mo>;</mo><mi>Ω</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\boldsymbol\tau\in H_N(\mathrm{div};\Omega)</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>∈</mo><msubsup><mi>H</mi><mi>D</mi><mn>1</mn></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><mi>Ω</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">v\in H_D^1(\Omega)</annotation></semantics></math>. Thus conforming least-squares discretizations retain symmetric positive-definite systems, quasi-optimality, and a native residual-based error estimator, subject to the stated well-posedness and conforming-space assumptions.</p>
 <div class="box">
-The
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>H</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><annotation encoding="application/x-tex">H^{-1}</annotation></semantics></math>
-part of the data should be absorbed into the flux, not left inside an
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math>
-divergence residual. <span class="zh">數據中的
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>H</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><annotation encoding="application/x-tex">H^{-1}</annotation></semantics></math>
-部分應被吸收到通量中，而不應留在一個要求屬於
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math>
-的散度殘差內。</span>
+<p><strong>The negative norm belongs to the data space, not necessarily to the residual.</strong> A divergence splitting keeps the familiar <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math> FOSLS structure.</p>
+<div class="zh">
+<p><strong>負範數出現在數據空間，不一定要放進殘差泛函。</strong> 正確的散度分解與通量重定義，已足以恢復標準的 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math>-based FOSLS 架構。</p>
 </div>
-<h2
-id="boundary-conditions-for-the-shifted-flux-修正通量的邊界條件">Boundary
-Conditions for the Shifted Flux <span
-class="zh">修正通量的邊界條件</span></h2>
-<p>Once the data are incorporated into the flux, the Neumann condition
-must be imposed on that same shifted flux:</p>
-<div class="formula">
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo>⋅</mo><mi>n</mi><mo>=</mo><mi>ψ</mi><mspace width="1.0em"></mspace><mrow><mtext mathvariant="normal">on </mtext><mspace width="0.333em"></mspace></mrow><msub><mi mathvariant="normal">Γ</mi><mi>N</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
-      \sigma\cdot n=\psi \quad\text{on }\Gamma_N.
-    </annotation></semantics></math>
 </div>
-<p>The natural affine spaces are therefore</p>
-<div class="formula">
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>:=</mo><mo stretchy="false" form="prefix">{</mo><mi>v</mi><mo>∈</mo><msup><mi>H</mi><mn>1</mn></msup><mo stretchy="false" form="prefix">(</mo><mi mathvariant="normal">Ω</mi><mo stretchy="false" form="postfix">)</mo><mo>:</mo><mi>v</mi><mo>=</mo><mi>ϕ</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> on </mtext><mspace width="0.333em"></mspace></mrow><msub><mi mathvariant="normal">Γ</mi><mi>D</mi></msub><mo stretchy="false" form="postfix">}</mo><mo>,</mo></mrow><annotation encoding="application/x-tex">
-      X:=\{v\in H^1(\Omega):v=\phi\text{ on }\Gamma_D\},
-    </annotation></semantics></math>
+</section>
+<section><h2 id="where-this-stops-a-dirac-source-hilbert-尺度的邊界dirac-源">Where This Stops: A Dirac Source <span class="zh">Hilbert 尺度的邊界：Dirac 源</span></h2>
+<p>In two dimensions, a point Dirac measure is <strong>not</strong> in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>H</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>Ω</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">H^{-1}(\Omega)</annotation></semantics></math>. Its explicit divergence lifting behaves like <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mrow><mo stretchy="true" form="prefix">|</mo><mi>x</mi><mo>−</mo><msub><mi>x</mi><mn>0</mn></msub><mo stretchy="true" form="postfix">|</mo></mrow><mrow><mi>−</mi><mn>1</mn></mrow></msup><annotation encoding="application/x-tex">|x-x_0|^{-1}</annotation></semantics></math> and belongs to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mi>p</mi></msup><annotation encoding="application/x-tex">L^p</annotation></semantics></math> for every <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>&lt;</mo><mi>p</mi><mo>&lt;</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">1&lt;p&lt;2</annotation></semantics></math>, but not to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math>. The same structural splitting still makes sense, but the analysis must leave the Hilbert scale: see <a href="dirac-mixed.html">A Dirac Source Is First a Failure of Duality</a>.</p>
+<div class="zh">
+<p>二維 Dirac 測度不屬於 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>H</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><annotation encoding="application/x-tex">H^{-1}</annotation></semantics></math>，所以不能直接套用上面的 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math> 分解。相同的結構性思路仍成立，但必須轉到 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mi>p</mi></msup><annotation encoding="application/x-tex">L^p</annotation></semantics></math> 尺度。這正是另一篇 <a href="dirac-mixed.html">Dirac mixed 專題</a> 的起點。</p>
 </div>
-<div class="formula">
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Σ</mi><mo>:=</mo><mo stretchy="false" form="prefix">{</mo><mi>τ</mi><mo>∈</mo><mi>H</mi><mo stretchy="false" form="prefix">(</mo><mi>div</mi><mo>&#8289;</mo><mo>;</mo><mi mathvariant="normal">Ω</mi><mo stretchy="false" form="postfix">)</mo><mo>:</mo><mi>τ</mi><mo>⋅</mo><mi>n</mi><mo>=</mo><mi>ψ</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> on </mtext><mspace width="0.333em"></mspace></mrow><msub><mi mathvariant="normal">Γ</mi><mi>N</mi></msub><mo stretchy="false" form="postfix">}</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
-      \Sigma:=\{\tau\in H(\operatorname{div};\Omega):
-      \tau\cdot n=\psi\text{ on }\Gamma_N\}.
-    </annotation></semantics></math>
+<p>The discussion here concerns volume data and the <strong>external</strong> mixed boundary. Sources supported on interior interfaces or embedded surfaces require their own jump and trace accounting and are left for a later treatment.</p>
+</section>
+<section><h2 id="papers-相關論文">Papers <span class="zh">相關論文</span></h2>
+<div class="paper">
+<p><strong>A simple proof of coerciveness of first-order system least-squares methods for general second-order elliptic PDEs</strong></p>
+<p>Shun Zhang. <em>Computers &amp; Mathematics with Applications</em> <strong>130</strong> (2023), 98–104.</p>
+<p><a href="https://doi.org/10.1016/j.camwa.2022.11.021" target="_blank" rel="noopener noreferrer">Journal DOI</a> · <a href="https://arxiv.org/abs/2201.08026" target="_blank" rel="noopener noreferrer">Expanded preprint</a></p>
 </div>
-<p>一旦
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>f</mi><mn>2</mn></msub><annotation encoding="application/x-tex">f_2</annotation></semantics></math>
-被吸收到通量定義中，Neumann
-數據也必須施加在同一個修正通量的正常跡上。勢變量與通量變量分別位於帶給定
-Dirichlet 跡和 Neumann 正常跡的仿射空間中。</p>
-<div class="box">
-The shifted flux definition and its normal boundary condition are one
-structure; they cannot be chosen independently. <span
-class="zh">修正通量的定義與其法向邊界條件屬於同一個結構，不能彼此獨立選取。</span>
+<div class="paper" style="margin-top:1rem">
+<p><strong>Goal-Oriented Error Estimation for Least-Squares Finite Element Methods via Physically Meaningful Adjoint PDEs</strong></p>
+<p>Yueyao Wu and Shun Zhang. Preprint, 2026. See Sections 2.1–2.2 for the mixed-boundary weak problem and shifted-flux formulation.</p>
+<p><a href="https://arxiv.org/abs/2607.23850" target="_blank" rel="noopener noreferrer">arXiv</a> · <a href="https://arxiv.org/pdf/2607.23850" target="_blank" rel="noopener noreferrer">PDF</a></p>
 </div>
-<h2 id="the-equivalent-first-order-system-等價的一階系統">The Equivalent
-First-Order System <span class="zh">等價的一階系統</span></h2>
-<div class="formula">
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><menclose notation="box"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>σ</mi><mo>+</mo><mi>A</mi><mi>∇</mi><mi>u</mi><mo>+</mo><msub><mi>f</mi><mn>2</mn></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>0</mn></mtd><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mrow><mtext mathvariant="normal">in </mtext><mspace width="0.333em"></mspace></mrow><mi mathvariant="normal">Ω</mi><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>∇</mi><mspace width="-0.167em"></mspace><mo>⋅</mo><mi>σ</mi><mo>+</mo><mi>b</mi><mo>⋅</mo><mi>∇</mi><mi>u</mi><mo>+</mo><mi>c</mi><mi>u</mi></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi>f</mi><mn>1</mn></msub></mtd><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mrow><mtext mathvariant="normal">in </mtext><mspace width="0.333em"></mspace></mrow><mi mathvariant="normal">Ω</mi><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>u</mi></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>ϕ</mi></mtd><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mrow><mtext mathvariant="normal">on </mtext><mspace width="0.333em"></mspace></mrow><msub><mi mathvariant="normal">Γ</mi><mi>D</mi></msub><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>σ</mi><mo>⋅</mo><mi>n</mi></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>ψ</mi></mtd><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mrow><mtext mathvariant="normal">on </mtext><mspace width="0.333em"></mspace></mrow><msub><mi mathvariant="normal">Γ</mi><mi>N</mi></msub><mo>,</mo></mtd></mtr></mtable></menclose><annotation encoding="application/x-tex">
-      \boxed{\begin{aligned}
-      \sigma+A\nabla u+f_2&amp;=0 &amp;&amp;\text{in }\Omega,\\
-      \nabla\!\cdot\sigma+b\cdot\nabla u+cu&amp;=f_1 &amp;&amp;\text{in }\Omega,\\
-      u&amp;=\phi &amp;&amp;\text{on }\Gamma_D,\\
-      \sigma\cdot n&amp;=\psi &amp;&amp;\text{on }\Gamma_N,
-      \end{aligned}}
-    </annotation></semantics></math>
-</div>
-<p>Thus
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>σ</mi><mo>,</mo><mi>u</mi><mo stretchy="false" form="postfix">)</mo><mo>∈</mo><mi mathvariant="normal">Σ</mi><mo>×</mo><mi>X</mi></mrow><annotation encoding="application/x-tex">(\sigma,u)\in\Sigma\times X</annotation></semantics></math>.
-The weak second-order problem and this first-order system are
-equivalent, with the normal trace identified through Green's
-formula.</p>
-<p>因此
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>σ</mi><mo>,</mo><mi>u</mi><mo stretchy="false" form="postfix">)</mo><mo>∈</mo><mi mathvariant="normal">Σ</mi><mo>×</mo><mi>X</mi></mrow><annotation encoding="application/x-tex">(\sigma,u)\in\Sigma\times X</annotation></semantics></math>。弱形式的二階問題與這個一階系統等價，而修正通量的正常跡由
-Green 公式識別。</p>
-<h2 id="the-least-squares-functional-最小二乘泛函">The Least-Squares
-Functional <span class="zh">最小二乘泛函</span></h2>
-<p>The two equations now have genuine
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math>
-residuals. A natural least-squares functional is</p>
-<div class="formula">
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℒ</mi><mo stretchy="false" form="prefix">(</mo><mi>τ</mi><mo>,</mo><mi>v</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mo stretchy="false" form="postfix">∥</mo><msup><mi>A</mi><mrow><mi>−</mi><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>τ</mi><mo>+</mo><mi>A</mi><mi>∇</mi><mi>v</mi><mo>+</mo><msub><mi>f</mi><mn>2</mn></msub><mo stretchy="false" form="postfix">)</mo><msubsup><mo stretchy="false" form="postfix">∥</mo><mn>0</mn><mn>2</mn></msubsup><mi>+</mi><mo stretchy="false" form="postfix">∥</mo><mi>∇</mi><mspace width="-0.167em"></mspace><mo>⋅</mo><mi>τ</mi><mo>+</mo><mi>b</mi><mo>⋅</mo><mi>∇</mi><mi>v</mi><mo>+</mo><mi>c</mi><mi>v</mi><mo>−</mo><msub><mi>f</mi><mn>1</mn></msub><msubsup><mo stretchy="false" form="postfix">∥</mo><mn>0</mn><mn>2</mn></msubsup><mo>,</mo></mrow><annotation encoding="application/x-tex">
-      \mathcal L(\tau,v)=
-      \|A^{-1/2}(\tau+A\nabla v+f_2)\|_0^2
-      +\|\nabla\!\cdot\tau+b\cdot\nabla v+cv-f_1\|_0^2,
-    </annotation></semantics></math>
-</div>
-<p>minimized over
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Σ</mi><mo>×</mo><mi>X</mi></mrow><annotation encoding="application/x-tex">\Sigma\times X</annotation></semantics></math>,
-or over the corresponding homogeneous spaces after taking boundary
-liftings.</p>
-<p>選對通量後，兩個方程都具有真正的
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math>
-殘差。邊界數據可以直接編碼在仿射試探空間中，也可以先作
-lifting，再在相應的齊次空間上極小化。</p>
-<h2 id="the-structural-chain-完整的結構鏈">The Structural Chain <span
-class="zh">完整的結構鏈</span></h2>
-<div class="chain">
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>H</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> data</mtext></mrow><mo>⇒</mo><mi>−</mi><mi>A</mi><mi>∇</mi><mi>u</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> may not be in </mtext><mspace width="0.333em"></mspace></mrow><mi>H</mi><mo stretchy="false" form="prefix">(</mo><mi>div</mi><mo>&#8289;</mo><mo stretchy="false" form="postfix">)</mo><mo>⇒</mo><mi>σ</mi><mo>=</mo><mi>−</mi><mi>A</mi><mi>∇</mi><mi>u</mi><mo>−</mo><msub><mi>f</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">
-      H^{-1}\text{ data}
-      \Longrightarrow -A\nabla u\text{ may not be in }H(\operatorname{div})
-      \Longrightarrow \sigma=-A\nabla u-f_2
-      </annotation></semantics></math>
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>⇒</mo><mi>σ</mi><mo>⋅</mo><mi>n</mi><mo>=</mo><mi>ψ</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> on </mtext><mspace width="0.333em"></mspace></mrow><msub><mi mathvariant="normal">Γ</mi><mi>N</mi></msub><mo>⇒</mo><mrow><mtext mathvariant="normal">a valid </mtext><mspace width="0.333em"></mspace></mrow><msup><mi>L</mi><mn>2</mn></msup><mtext mathvariant="normal">-residual LSFEM</mtext><mi>.</mi></mrow><annotation encoding="application/x-tex">
-      \Longrightarrow \sigma\cdot n=\psi\text{ on }\Gamma_N
-      \Longrightarrow \text{a valid }L^2\text{-residual LSFEM}.
-      </annotation></semantics></math>
-</div>
-<p>這個構造保留了 conforming
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mo stretchy="false" form="prefix">(</mo><mi>div</mi><mo>&#8289;</mo><mo stretchy="false" form="postfix">)</mo><mo>×</mo><msup><mi>H</mi><mn>1</mn></msup></mrow><annotation encoding="application/x-tex">H(\operatorname{div})\times H^1</annotation></semantics></math>
-離散、對稱正定代數系統、準最佳逼近、內建最小二乘誤差估計，以及逐單元局部化與自適應加密。</p>
-<h2 id="papers-相關論文">Papers <span class="zh">相關論文</span></h2>
-<p>A simple proof of coerciveness of first-order system least-squares
-methods for general second-order elliptic PDEs</p>
-<p>Shun Zhang</p>
-<p><em>Computers &amp; Mathematics with Applications</em>, 2023.</p>
-<p><a href="31_2023_camwa_lsfem_proof.pdf" target="_blank"
-rel="noopener noreferrer">PDF</a></p>
-<p>Goal-Oriented Error Estimation for Least-Squares Finite Element
-Methods via Physically Meaningful Adjoint PDEs</p>
-<p>Yueyao Wu and Shun Zhang</p>
-<p>Preprint, 2026. The mixed-boundary primal formulation supplies the
-complete affine potential and shifted-flux spaces used on this page.</p>
-<p><a href="https://arxiv.org/pdf/2607.23850" target="_blank"
-rel="noopener noreferrer">arXiv PDF</a></p>
-© Shun Zhang
-</div>
+</section>
+
+<footer>© Shun Zhang</footer>
+</main>
 </body>
 </html>

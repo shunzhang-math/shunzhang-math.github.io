@@ -1,28 +1,77 @@
 <!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Gibbs phenomena in finite element approximation: overshoots, pointwise control, mesh alignment, and L1 minimization.">
-<title>Gibbs Phenomena | Shun Zhang</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Gibbs phenomena in finite element approximation: overshoots, pointwise control, mesh alignment, and L1 minimization." name="description"/>
+<title>Did the Method Really Resolve the Gibbs Phenomenon? | Shun Zhang</title>
 <style>
-*{box-sizing:border-box}body{margin:0;color:#202020;background:#fff;font:18px/1.72 Georgia,"Times New Roman",serif}.page{width:min(100% - 2.5rem,820px);margin:auto;padding:2.2rem 0 5rem}a{color:#174f86}.home{font:15px Arial,sans-serif;text-decoration:none}h1{margin:3.2rem 0 .4rem;font-size:clamp(2.7rem,8vw,4.8rem);font-weight:500;line-height:1.08}.zh-title{margin:0;color:#555;font-size:1.6rem;letter-spacing:.12em}.lead{margin:2rem 0 0;font-size:1.3rem;line-height:1.6}.zh{font-family:"Noto Serif TC","Songti TC","PMingLiU",serif;color:#555}.lead.zh{margin-top:.8rem}section{margin-top:3.7rem}h2{border-bottom:1px solid #ddd;padding-bottom:.45rem;font-size:1.65rem;font-weight:500}h2 .zh{font-size:.76em}.box{margin:1.5rem 0;padding:1.25rem 1.4rem;border-left:4px solid #174f86;background:#f6f8fa;font-size:1.1rem}.box .zh{display:block;margin-top:.7rem}.terms{display:flex;flex-wrap:wrap;gap:.5rem}.term{padding:.3rem .6rem;border:1px solid #d8dce2;border-radius:999px;background:#fafbfc;font:14px Arial,sans-serif}li{margin:.85rem 0}.paper{padding:1.4rem;border:1px solid #ddd;background:#fcfcfc}.paper strong{font-size:1.08rem}footer{margin-top:5rem;border-top:1px solid #ddd;padding-top:1rem;color:#777;font:14px Arial,sans-serif}@media(max-width:560px){body{font-size:17px}.page{width:min(100% - 2rem,820px)}}
+:root{color-scheme:light}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#fff;color:#202020;font:18px/1.72 Georgia,"Times New Roman",serif;-webkit-font-smoothing:antialiased}
+a{color:#174f86;text-underline-offset:.13em}
+a:hover{color:#0c345c}
+a:focus-visible{outline:2px solid #174f86;outline-offset:3px}
+.page{width:min(100% - 2.5rem,850px);margin:auto;padding:2.2rem 0 5rem}
+.home{display:inline-block;font:15px/1.5 Arial,Helvetica,sans-serif;text-decoration:none}
+header{margin:0}
+h1{margin:3.2rem 0 .45rem;font-size:clamp(2.25rem,6.3vw,4.5rem);font-weight:500;line-height:1.12;overflow-wrap:break-word}
+.zh-title{margin:0;color:#555;font-size:clamp(1.15rem,2.65vw,1.55rem);letter-spacing:.02em}
+.zh-title p{margin:0}
+.lead{margin:2rem 0 0;font-size:1.27rem;line-height:1.6}
+.lead p{margin:0}
+.lead.zh{margin-top:.8rem}
+.zh{font-family:"Noto Serif TC","Songti TC","PMingLiU",serif;color:#555}
+section{margin-top:3.7rem}
+h2{margin:0 0 1.25rem;padding-bottom:.45rem;border-bottom:1px solid #ddd;font-size:clamp(1.45rem,3.2vw,1.7rem);font-weight:500;line-height:1.4}
+h2 .zh{font-size:.76em}
+h3{font-size:1.15rem;font-weight:600;margin-top:2rem}
+p{margin:1.05rem 0}
+ul,ol{padding-left:1.45rem}
+li{margin:.62rem 0}
+.box{margin:1.55rem 0;padding:1.2rem 1.4rem;border-left:4px solid #174f86;background:#f6f8fa;font-size:1.08rem}
+.box>p:first-child{margin-top:0}
+.box>p:last-child{margin-bottom:0}
+.box .zh{display:block;margin-top:.7rem}
+.box .zh p{margin:.35rem 0 0}
+.equation,.formula{max-width:100%;overflow-x:auto;margin:1.4rem 0;padding:1rem 1.1rem;text-align:center;font-size:1.08rem;line-height:1.9}
+.equation math[display="block"],.formula math[display="block"]{margin:.1rem auto}
+.eqline{display:block;white-space:nowrap}
+.chain{margin:1.5rem 0;padding:1.3rem;border:1px solid #d9dfe5;background:#fbfcfd;text-align:center}
+.chain>p{margin:.45rem 0}
+.comparison{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:1.5rem 0}
+.card{min-width:0;padding:1.2rem;border:1px solid #ddd;background:#fcfcfc}
+.card p{margin:.5rem 0}
+.card strong{display:block;margin-bottom:.35rem}
+.paper{padding:1.35rem;border:1px solid #ddd;background:#fcfcfc}
+.paper p{margin:.5rem 0}
+.paper-title{font-weight:700}
+.links{font:15px/1.8 Arial,Helvetica,sans-serif}
+.figure-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.15rem;margin:1.7rem 0}
+.mesh-figure{margin:0}
+.mesh-figure img{display:block;width:100%;height:auto;border:1px solid #d4d8dc;background:#f3f6f8}
+.mesh-figure figcaption{margin-top:.65rem;font:15px/1.5 Arial,Helvetica,sans-serif;color:#4d4d4d}
+.mesh-figure figcaption .zh{display:block;margin-top:.25rem;font-size:.95em}
+.single-figure{width:min(100%,650px);margin:1.7rem auto}
+.terms{display:flex;flex-wrap:wrap;gap:.5rem}
+.term{padding:.3rem .6rem;border:1px solid #d8dce2;border-radius:999px;background:#fafbfc;font:14px Arial,Helvetica,sans-serif}
+footer{margin-top:5rem;border-top:1px solid #ddd;padding-top:1rem;color:#777;font:14px Arial,Helvetica,sans-serif}
+.cross-link{padding:1rem 1.2rem;background:#fafbfc;border:1px solid #e3e7eb}
+@media(max-width:620px){body{font-size:17px}.page{width:min(100% - 2rem,850px);padding-top:1.3rem}.comparison,.figure-grid{grid-template-columns:1fr}.equation,.formula{padding:.8rem .2rem;font-size:1rem}.box{padding:1rem 1.05rem}h1{margin-top:2.1rem;font-size:clamp(2.05rem,8vw,3.5rem)}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
 <body><main class="page">
 <a class="home" href="index.html">← Shun Zhang</a>
-<header><h1>Gibbs Phenomena</h1><p class="zh-title zh">Gibbs 現象</p><p class="lead">The Gibbs phenomenon is fundamentally an approximation problem, not a stability problem: integral control does not imply pointwise control near a discontinuity.</p><p class="lead zh">Gibbs 現象本質上是一個逼近問題，而不是穩定性問題：積分意義下的控制，不能推出間斷附近的點值控制。</p></header>
-
-<section><h2>The Approximation Mechanism <span class="zh">逼近機制</span></h2><p>The Gibbs phenomenon is not a mysterious defect caused by numerical instability. It already appears at the level of approximation, even when the projection or numerical method is stable. A discontinuous or nearly discontinuous function is approximated in a finite-dimensional space through an integral criterion such as an <i>L</i><sup>2</sup> projection, a least-squares principle, or another variational minimization.</p><p class="zh">Gibbs 現象不是由數值不穩定性造成的神祕缺陷。即使投影或數值方法是穩定的，它在逼近層面仍然會出現。人們以有限維空間中的函數逼近間斷或近乎間斷的函數，而逼近通常由 <i>L</i><sup>2</sup> 投影、最小二乘原理或其他積分型變分準則決定。</p><div class="box">Small error in an integral norm does not control point values, local extrema, overshoots, or undershoots near a discontinuity.<span class="zh">積分型範數中的小誤差，不能控制間斷附近的點值、局部極值、overshoot 或 undershoot。</span></div><p>For a continuous approximation space, the approximant must connect values across a jump that it cannot represent. An integral projection controls an average error; it does not impose a pointwise range constraint. Thus an approximation may converge in <i>L</i><sup>2</sup> while retaining a non-trivial pointwise overshoot.</p><div class="box"><i>L</i><sup>2</sup>-convergence and the disappearance of Gibbs overshoots are different questions.<span class="zh"><i>L</i><sup>2</sup> 收斂與 Gibbs 過衝是否消失，是兩個不同的問題。</span></div></section>
-
+<header><h1>Did the Method Really Resolve the Gibbs Phenomenon?</h1><p class="zh-title zh">這個方法真的解決了 Gibbs 現象嗎？</p><p class="lead">The Gibbs phenomenon is fundamentally an approximation problem, not a stability problem: integral-norm control does not imply pointwise control near a discontinuity.</p><p class="lead zh">Gibbs 現象本質上是一個逼近問題，而不是穩定性問題：積分範數的誤差控制，不能推出間斷附近的點值控制。</p></header>
+<section><h2>The Approximation Mechanism <span class="zh">逼近機制</span></h2><p>The Gibbs phenomenon arises from the approximation mechanism. An integral criterion such as an L² projection, a least-squares principle, or another variational minimization does not impose pointwise range constraints when approximating a discontinuous or nearly discontinuous function.</p><p class="zh">Gibbs 現象來自逼近機制。對間斷或近乎間斷的函數，L² 投影、最小二乘或其他積分型變分極小化只控制整體誤差，並不約束逐點值域。</p><div class="box">Small error in an integral norm does not control point values, local extrema, overshoots, or undershoots near a discontinuity.<span class="zh">積分型範數中的小誤差，不能控制間斷附近的點值、局部極值、overshoot 或 undershoot。</span></div><p>For a continuous approximation space, the approximant must connect values across a jump that it cannot represent. An integral projection controls an average error; it does not impose a pointwise range constraint. Thus an approximation may converge in <i>L</i><sup>2</sup> while retaining a non-trivial pointwise overshoot.</p><div class="box"><i>L</i><sup>2</sup>-convergence and the disappearance of Gibbs overshoots are different questions.<span class="zh"><i>L</i><sup>2</sup> 收斂與 Gibbs 過衝是否消失，是兩個不同的問題。</span></div></section>
 <section><h2>One Phenomenon, Many Names <span class="zh">同一現象，不同名稱</span></h2><p>A paper may avoid the name “Gibbs phenomenon” while discussing the same pointwise failure under another label.</p><p class="zh">一篇論文可能避開「Gibbs 現象」這個名稱，卻用另一個標籤討論同一類點值失控。</p><div class="terms"><span class="term">overshoot</span><span class="term">undershoot</span><span class="term">spurious oscillations</span><span class="term">nonphysical oscillations</span><span class="term">oscillatory solutions</span><span class="term">numerical ringing</span><span class="term">wiggles</span><span class="term">loss of monotonicity</span><span class="term">discrete maximum-principle violation</span></div><p>These terms are not identical in every mathematical context. Here they warn of the same issue: integral or variational control does not automatically keep the approximation inside the physically admissible pointwise range.</p></section>
-
 <section><h2>Why a Numerical Plot Is Not Enough <span class="zh">為什麼一張數值圖不夠</span></h2><div class="box">A visually non-oscillatory example does not identify the approximation mechanism and therefore cannot establish pointwise control.<span class="zh">一個視覺上無振盪的例子，並沒有識別背後的逼近機制，因此不能證明方法具有點值控制。</span></div><p>The decisive questions concern the approximation space and projection: Is the approximant continuous or discontinuous? What is its polynomial degree? Is the discontinuity aligned with the mesh? Does the defining norm control point values? Does the overshoot persist when the mesh is refined or the discontinuity is moved?</p><p>A boundary layer is a special aligned case because it is attached to the domain boundary. This helps explain why many DG-like methods appear free of Gibbs oscillations in boundary-layer tests. It does not establish pointwise control for general non-aligned interior discontinuities.</p><p class="zh">邊界層是一個特殊的對齊情形，因為它天然依附於計算域邊界。這有助於解釋許多 DG-like 方法為何在邊界層測試中看似沒有 Gibbs 振盪；但這不能證明它們對一般非對齊的內部間斷具有點值控制。</p></section>
-
-<section><h2>Why <i>L</i><sup>1</sup> Minimization Is Not a General Cure <span class="zh">為什麼 <i>L</i><sup>1</sup> 極小化不是一般性的解法</span></h2><p><i>L</i><sup>1</sup>-minimization is sometimes claimed to eliminate or strongly suppress the Gibbs phenomenon. Such a statement has no general validity. The absence of overshoot occurs only under conditions far more restrictive than mesh alignment alone. It depends on the approximation space, polynomial degree, local configuration, and, because an <i>L</i><sup>1</sup>-best approximation may be nonunique, even on which minimizer is selected.</p><p class="zh"><i>L</i><sup>1</sup> 極小化有時被宣稱可以消除或顯著抑制 Gibbs 現象。這樣的說法並不具有一般有效性。無過衝只在遠比「網格與間斷對齊」更嚴格的條件下才可能出現；它還取決於逼近空間、多項式次數、局部配置，以及在 <i>L</i><sup>1</sup> 最佳逼近不唯一時究竟選取哪一個極小化解。</p><div class="box">Changing <i>L</i><sup>2</sup> to <i>L</i><sup>1</sup> does not create pointwise control. Even discontinuity alignment is not, by itself, sufficient to prevent overshoot.<span class="zh">把 <i>L</i><sup>2</sup> 改成 <i>L</i><sup>1</sup>，並不會產生點值控制。即使間斷與網格對齊，其本身也不足以防止過衝。</span></div><p>In slightly more general settings, non-trivial overshoots reappear. Thus neither an <i>L</i><sup>1</sup> objective nor mesh alignment supplies a general pointwise bound or a discrete maximum principle. The exceptional cases without overshoot cannot be promoted to a method-level claim.</p><p class="zh">在稍微一般一些的情形下，不可忽略的過衝便會重新出現。因此，使用 <i>L</i><sup>1</sup> 目標函數或採用對齊網格，都不能提供一般性的逐點界或離散最大值原理。少數無過衝的特殊情形，不能被提升為對整個方法的一般性結論。</p><p>Moreover, <i>L</i><sup>1</sup>-minimization is substantially more expensive than an <i>L</i><sup>2</sup> projection: it requires a nonsmooth iterative optimization problem rather than a linear solve, while offering no general improvement in overshoot control.</p><p class="zh">此外，<i>L</i><sup>1</sup> 極小化的計算成本遠高於 <i>L</i><sup>2</sup> 投影：它需要求解非光滑迭代優化問題，而不是一個線性系統，卻並未提供一般性的過衝控制改進。</p></section>
-
-<section><h2>Main Findings <span class="zh">主要結論</span></h2><ul><li>Piecewise constant discontinuous approximations avoid overshoot even on a non-matched mesh.</li><li>Higher-order discontinuous approximations generally overshoot when a discontinuity cuts through an element.</li><li>Continuous piecewise linear approximations exhibit non-trivial overshoots on regular meshes.</li><li>Adaptive refinement may reduce integration-based error norms without eliminating pointwise overshoots.</li><li>Neither <i>L</i><sup>1</sup> minimization nor discontinuity alignment provides a general no-overshoot guarantee.</li></ul></section>
-
-<section><h2>Core Paper <span class="zh">核心論文</span></h2><div class="paper"><strong>Battling Gibbs phenomenon: On finite element approximations of discontinuous solutions of PDEs</strong><p>Shun Zhang, <i>Computers &amp; Mathematics with Applications</i>, 122 (2022), 35–47.</p><p><a href="https://doi.org/10.1016/j.camwa.2022.07.014" target="_blank" rel="noopener noreferrer">DOI</a> · <a href="29_2022_cma_gibbs.pdf" target="_blank" rel="noopener noreferrer">PDF</a></p></div></section>
+<section><h2>Why <i>L</i><sup>1</sup> Minimization Is Not a General Cure <span class="zh">為什麼 <i>L</i><sup>1</sup> 極小化不是一般性的解法</span></h2><p><i>L</i><sup>1</sup>-minimization is sometimes claimed to eliminate or strongly suppress the Gibbs phenomenon. Such a statement has no general validity. The absence of overshoot occurs only under conditions far more restrictive than mesh alignment alone. It depends on the approximation space, polynomial degree, local configuration, and, because an <i>L</i><sup>1</sup>-best approximation may be nonunique, even on which minimizer is selected.</p><p class="zh"><i>L</i><sup>1</sup> 極小化有時被宣稱可以消除或顯著抑制 Gibbs 現象。這樣的說法並不具有一般有效性。無過衝只在遠比「網格與間斷對齊」更嚴格的條件下才可能出現；它還取決於逼近空間、多項式次數、局部配置，以及在 <i>L</i><sup>1</sup> 最佳逼近不唯一時究竟選取哪一個極小化解。</p><div class="box">Changing <i>L</i><sup>2</sup> to <i>L</i><sup>1</sup> does not create pointwise control. Even discontinuity alignment is not, by itself, sufficient to prevent overshoot.<span class="zh">把 <i>L</i><sup>2</sup> 改成 <i>L</i><sup>1</sup>，並不會產生點值控制。即使間斷與網格對齊，其本身也不足以防止過衝。</span></div><p>In slightly more general settings, non-trivial overshoots reappear. Thus neither an <i>L</i><sup>1</sup> objective nor mesh alignment supplies a general pointwise bound or a discrete maximum principle. The exceptional cases without overshoot cannot be promoted to a method-level claim.</p><p class="zh">在稍微一般一些的情形下，不可忽略的過衝便會重新出現。因此，使用 <i>L</i><sup>1</sup> 目標函數或採用對齊網格，都不能提供一般性的逐點界或離散最大值原理。少數無過衝的特殊情形，不能被提升為對整個方法的一般性結論。</p><p>Moreover, <i>L</i><sup>1</sup>-minimization generally requires nonsmooth optimization rather than a single linear projection solve; it also supplies no general guarantee of pointwise overshoot control. Its computational cost and possible benefits should be assessed for the particular space and problem.</p><p class="zh">此外，<i>L</i><sup>1</sup> 極小化的計算成本遠高於 <i>L</i><sup>2</sup> 投影：它需要求解非光滑迭代優化問題，而不是一個線性系統，卻並未提供一般性的過衝控制改進。</p></section>
+<section><h2>Main Findings <span class="zh">主要結論</span></h2><ul><li>For a bounded step function, the elementwise L² projection onto discontinuous piecewise constants consists of cell averages and has no overshoot, even on a non-matched mesh.</li><li>Higher-order discontinuous approximations generally overshoot when a discontinuity cuts through an element.</li><li>Continuous piecewise linear approximations exhibit non-trivial overshoots on regular meshes.</li><li>Adaptive refinement may reduce integration-based error norms without eliminating pointwise overshoots.</li><li>Neither <i>L</i><sup>1</sup> minimization nor discontinuity alignment provides a general no-overshoot guarantee.</li></ul></section>
+<section><h2>Core Paper <span class="zh">核心論文</span></h2><div class="paper"><strong>Battling Gibbs phenomenon: On finite element approximations of discontinuous solutions of PDEs</strong><p>Shun Zhang, <i>Computers &amp; Mathematics with Applications</i>, 122 (2022), 35–47.</p><p><a href="https://doi.org/10.1016/j.camwa.2022.07.014" rel="noopener noreferrer" target="_blank">DOI</a> · <a href="https://arxiv.org/pdf/1907.03429" rel="noopener noreferrer" target="_blank">arXiv PDF</a></p></div></section>
 <footer>© Shun Zhang</footer>
 </main></body></html>

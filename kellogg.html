@@ -1,12 +1,67 @@
 <!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Why the adaptive mesh for Kellogg's checkerboard interface problem is radial: hidden coefficient-weighted energy symmetry and error equidistribution.">
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Why the adaptive mesh for Kellogg's checkerboard interface problem is radial: hidden coefficient-weighted energy symmetry and error equidistribution." name="description"/>
 <title>Why Is the Kellogg Mesh Radial? | Shun Zhang</title>
 <style>
-*{box-sizing:border-box}body{margin:0;color:#202020;background:#fff;font:18px/1.72 Georgia,"Times New Roman",serif}.page{width:min(100% - 2.5rem,850px);margin:auto;padding:2.2rem 0 5rem}a{color:#174f86}.home{font:15px Arial,sans-serif;text-decoration:none}h1{margin:3.2rem 0 .45rem;font-size:clamp(2.55rem,7vw,4.7rem);font-weight:500;line-height:1.08}.zh-title{margin:0;color:#555;font-size:1.55rem;letter-spacing:.04em}.lead{margin:2rem 0 0;font-size:1.3rem;line-height:1.6}.zh{font-family:"Noto Serif TC","Songti TC","PMingLiU",serif;color:#555}.lead.zh{margin-top:.8rem}section{margin-top:3.8rem}h2{border-bottom:1px solid #ddd;padding-bottom:.45rem;font-size:1.65rem;font-weight:500}h2 .zh{font-size:.76em}.box{margin:1.55rem 0;padding:1.25rem 1.4rem;border-left:4px solid #174f86;background:#f6f8fa;font-size:1.1rem}.box .zh{display:block;margin-top:.7rem}.equation{overflow-x:auto;margin:1.4rem 0;padding:1rem 1.1rem;text-align:center;font-size:1.12rem;line-height:1.9;white-space:nowrap}.eqline{display:block}.chain{margin:1.5rem 0;padding:1.25rem;border:1px solid #d9dfe5;background:#fbfcfd;text-align:center}.comparison{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}.card{padding:1.2rem;border:1px solid #ddd;background:#fcfcfc}.figure-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.15rem;margin:1.7rem 0}.mesh-figure{margin:0}.mesh-figure img{display:block;width:100%;height:auto;border:1px solid #d4d8dc;background:#18bebb}.mesh-figure figcaption{margin-top:.65rem;font:15px/1.5 Arial,sans-serif;color:#4d4d4d}.mesh-figure figcaption .zh{display:block;margin-top:.25rem;font-size:.95em}.single-figure{width:min(100%,650px);margin:1.7rem auto}.card strong{display:block;margin-bottom:.4rem}.paper{padding:1.4rem;border:1px solid #ddd;background:#fcfcfc}.paper-title{font-weight:700}.links{font:15px Arial,sans-serif}li{margin:.8rem 0}footer{margin-top:5rem;border-top:1px solid #ddd;padding-top:1rem;color:#777;font:14px Arial,sans-serif}@media(max-width:620px){body{font-size:17px}.page{width:min(100% - 2rem,850px)}.comparison,.figure-grid{grid-template-columns:1fr}.equation{font-size:1rem}}
+:root{color-scheme:light}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#fff;color:#202020;font:18px/1.72 Georgia,"Times New Roman",serif;-webkit-font-smoothing:antialiased}
+a{color:#174f86;text-underline-offset:.13em}
+a:hover{color:#0c345c}
+a:focus-visible{outline:2px solid #174f86;outline-offset:3px}
+.page{width:min(100% - 2.5rem,850px);margin:auto;padding:2.2rem 0 5rem}
+.home{display:inline-block;font:15px/1.5 Arial,Helvetica,sans-serif;text-decoration:none}
+header{margin:0}
+h1{margin:3.2rem 0 .45rem;font-size:clamp(2.25rem,6.3vw,4.5rem);font-weight:500;line-height:1.12;overflow-wrap:break-word}
+.zh-title{margin:0;color:#555;font-size:clamp(1.15rem,2.65vw,1.55rem);letter-spacing:.02em}
+.zh-title p{margin:0}
+.lead{margin:2rem 0 0;font-size:1.27rem;line-height:1.6}
+.lead p{margin:0}
+.lead.zh{margin-top:.8rem}
+.zh{font-family:"Noto Serif TC","Songti TC","PMingLiU",serif;color:#555}
+section{margin-top:3.7rem}
+h2{margin:0 0 1.25rem;padding-bottom:.45rem;border-bottom:1px solid #ddd;font-size:clamp(1.45rem,3.2vw,1.7rem);font-weight:500;line-height:1.4}
+h2 .zh{font-size:.76em}
+h3{font-size:1.15rem;font-weight:600;margin-top:2rem}
+p{margin:1.05rem 0}
+ul,ol{padding-left:1.45rem}
+li{margin:.62rem 0}
+.box{margin:1.55rem 0;padding:1.2rem 1.4rem;border-left:4px solid #174f86;background:#f6f8fa;font-size:1.08rem}
+.box>p:first-child{margin-top:0}
+.box>p:last-child{margin-bottom:0}
+.box .zh{display:block;margin-top:.7rem}
+.box .zh p{margin:.35rem 0 0}
+.equation,.formula{max-width:100%;overflow-x:auto;margin:1.4rem 0;padding:1rem 1.1rem;text-align:center;font-size:1.08rem;line-height:1.9}
+.equation math[display="block"],.formula math[display="block"]{margin:.1rem auto}
+.eqline{display:block;white-space:nowrap}
+.chain{margin:1.5rem 0;padding:1.3rem;border:1px solid #d9dfe5;background:#fbfcfd;text-align:center}
+.chain>p{margin:.45rem 0}
+.comparison{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:1.5rem 0}
+.card{min-width:0;padding:1.2rem;border:1px solid #ddd;background:#fcfcfc}
+.card p{margin:.5rem 0}
+.card strong{display:block;margin-bottom:.35rem}
+.paper{padding:1.35rem;border:1px solid #ddd;background:#fcfcfc}
+.paper p{margin:.5rem 0}
+.paper-title{font-weight:700}
+.links{font:15px/1.8 Arial,Helvetica,sans-serif}
+.figure-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.15rem;margin:1.7rem 0}
+.mesh-figure{margin:0}
+.mesh-figure img{display:block;width:100%;height:auto;border:1px solid #d4d8dc;background:#f3f6f8}
+.mesh-figure figcaption{margin-top:.65rem;font:15px/1.5 Arial,Helvetica,sans-serif;color:#4d4d4d}
+.mesh-figure figcaption .zh{display:block;margin-top:.25rem;font-size:.95em}
+.single-figure{width:min(100%,650px);margin:1.7rem auto}
+.terms{display:flex;flex-wrap:wrap;gap:.5rem}
+.term{padding:.3rem .6rem;border:1px solid #d8dce2;border-radius:999px;background:#fafbfc;font:14px Arial,Helvetica,sans-serif}
+footer{margin-top:5rem;border-top:1px solid #ddd;padding-top:1rem;color:#777;font:14px Arial,Helvetica,sans-serif}
+.cross-link{padding:1rem 1.2rem;background:#fafbfc;border:1px solid #e3e7eb}
+@media(max-width:620px){body{font-size:17px}.page{width:min(100% - 2rem,850px);padding-top:1.3rem}.comparison,.figure-grid{grid-template-columns:1fr}.equation,.formula{padding:.8rem .2rem;font-size:1rem}.box{padding:1rem 1.05rem}h1{margin-top:2.1rem;font-size:clamp(2.05rem,8vw,3.5rem)}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
 <body><main class="page">
@@ -17,75 +72,67 @@
 <p class="lead">A hidden coefficient-weighted energy symmetry explains the familiar adaptive mesh.</p>
 <p class="lead zh">一個隱藏的系數加權能量對稱性，解釋了那張人們熟悉的自適應網格。</p>
 </header>
-
 <section><h2>The Unexplained Picture <span class="zh">一張長期缺少解釋的圖</span></h2>
 <p>Kellogg's checkerboard interface problem is a classical benchmark for coefficient-robust adaptive finite element methods. A successful adaptive mesh refines strongly toward the interface crossing, yet remains concentric: it has no persistent preference for either pair of quadrants and no excess refinement along the coefficient interfaces.</p>
 <p class="zh">Kellogg 棋盤型界面問題是檢驗系數魯棒自適應有限元方法的經典 benchmark。正確的自適應網格會強烈加密界面交叉點，卻保持同心的徑向結構：它不會持續偏向某一對象限，也不會沿係數界面產生額外加密。</p>
-<div class="box">The familiar radial mesh was known. What was missing was a mathematical explanation of why it is the correct mesh.<span class="zh">人們早已知道那張徑向網格；真正缺少的是：為什麼它在數學上必須是正確的網格？</span></div>
+<div class="box">The familiar radial mesh invites a more precise question: which coefficient-weighted quantities explain its observed structure?<span class="zh">人們早已知道那張徑向網格；真正缺少的是：為什麼它在數學上必須是正確的網格？</span></div>
 <p>The puzzle is genuine. The coefficient has a large checkerboard contrast, and the singular solution is angularly asymmetric. Neither the coefficient nor the solution itself suggests radial symmetry.</p>
 <div class="figure-grid">
-  <figure class="mesh-figure">
-    <img src="kellogg_rt_mesh.png" alt="Radially graded adaptive triangular mesh for the Kellogg checkerboard problem, with refinement concentrated symmetrically around the central interface crossing.">
-    <figcaption><strong>Coefficient-robust weighting.</strong> The mesh is radially graded toward the central crossing, with comparable refinement in all four quadrants and no separate refinement band along the interfaces.<span class="zh"><strong>正確的系數魯棒加權。</strong>網格徑向加密到中心交叉點，四個象限的加密程度相當，界面本身沒有額外的加密帶。</span></figcaption>
-  </figure>
-  <figure class="mesh-figure">
-    <img src="kellogg_unweighted_mesh.png" alt="Angularly biased adaptive triangular mesh for the Kellogg checkerboard problem, with much heavier refinement in two opposite quadrants and along the interface axes.">
-    <figcaption><strong>Incorrect coefficient scaling.</strong> The mesh has a persistent angular bias: two opposite quadrants receive far more elements, and the coefficient interfaces acquire a visible refinement signature.<span class="zh"><strong>錯誤的係數尺度。</strong>網格出現持續的角向偏置：兩個相對象限得到遠多於其他象限的單元，係數界面也留下明顯的加密痕跡。</span></figcaption>
-  </figure>
+<figure class="mesh-figure">
+<img alt="Radially graded adaptive triangular mesh for the Kellogg checkerboard problem, with refinement concentrated symmetrically around the central interface crossing." src="https://arxiv.org/html/2608.22991v2/kellogg_rt_mesh.png"/>
+<figcaption><strong>Coefficient-robust weighting.</strong> The mesh is radially graded toward the central crossing, with comparable refinement in all four quadrants and no separate refinement band along the interfaces.<span class="zh"><strong>正確的系數魯棒加權。</strong>網格徑向加密到中心交叉點，四個象限的加密程度相當，界面本身沒有額外的加密帶。</span></figcaption>
+</figure>
+<figure class="mesh-figure">
+<img alt="Angularly biased adaptive triangular mesh for the Kellogg checkerboard problem, with much heavier refinement in two opposite quadrants and along the interface axes." src="https://arxiv.org/html/2608.22991v2/kellogg_unweighted_mesh.png"/>
+<figcaption><strong>Incorrect coefficient scaling.</strong> The mesh has a persistent angular bias: two opposite quadrants receive far more elements, and the coefficient interfaces acquire a visible refinement signature.<span class="zh"><strong>錯誤的係數尺度。</strong>網格出現持續的角向偏置：兩個相對象限得到遠多於其他象限的單元，係數界面也留下明顯的加密痕跡。</span></figcaption>
+</figure>
 </div>
 <p class="zh">第一張圖展示理論所預測的徑向配置；第二張圖則把錯誤的係數權重直接轉化成肉眼可見的象限偏置。兩張圖在相近的問題背景下對比，說明網格形狀本身包含收斂率無法提供的資訊。</p>
 </section>
-
 <section><h2>The Benchmark <span class="zh">Kellogg 模型</span></h2>
 <p>On the square Ω = (−1,1)<sup>2</sup>, the diffusion coefficient κ equals <i>R</i> in the first and third quadrants and 1 in the second and fourth. The exact singular solution has the homogeneous form</p>
 <div class="equation"><span class="eqline">−∇·(κ∇<i>u</i>) = 0 in Ω,</span><span class="eqline"><i>u</i>(<i>r</i>,θ) = <i>r</i><sup>γ</sup> μ(θ).</span></div>
 <p>For the standard choice γ = 0.1, the coefficient contrast is approximately <i>R</i> = 161.4476. The solution is very singular at the interface crossing and strongly asymmetric in angle.</p>
 <p class="zh">在標準參數 γ = 0.1 下，係數跳躍約為 <i>R</i> = 161.4476。解在界面交叉點具有很強的奇異性，並且在角方向上高度不對稱。</p>
 </section>
-
 <section><h2>The Hidden Energy Symmetry <span class="zh">隱藏的能量對稱性</span></h2>
 <p>The decisive quantities are not the unweighted gradient or the coefficient separately. They are the coefficient-weighted local quantities selected by the energy norm. For the Kellogg singular mode, they satisfy the exact identities</p>
 <div class="equation"><span class="eqline">κ |∇<i>u</i>|<sup>2</sup> = Λ <i>r</i><sup>2γ−2</sup>,</span><span class="eqline">κ |∇<sup>2</sup><sub>𝒫</sub><i>u</i>|<sub>F</sub><sup>2</sup> = 2(1−γ)<sup>2</sup> Λ <i>r</i><sup>2γ−4</sup>,</span><span class="eqline">Λ = γ<sup>2</sup> cos<sup>2</sup>(πγ/4).</span></div>
 <p>Here the Hessian is taken separately in each quadrant. The remarkable point is what has disappeared: both right-hand sides depend only on the radius <i>r</i>. The angular variable and the coefficient contrast have vanished from the weighted difficulty.</p>
 <p class="zh">其中 Hessian 在每個象限內分片計算。真正關鍵的是消失了什麼：兩個等式的右端都只依賴半徑 <i>r</i>。角變量與係數跳躍都從加權後的局部難度中消失了。</p>
 <div class="box">The solution is not radial. The coefficient is not radial. But the coefficient-weighted approximation difficulty is exactly radial.<span class="zh">解不是徑向的，係數也不是徑向的；但系數加權後的逼近難度卻恰好是徑向的。</span></div>
-<p>The weighted sector amplitudes balance exactly across all four quadrants, and the identities extend across the interfaces. Thus the interfaces carry no refinement signature of their own.</p>
+<p>The weighted sector amplitudes balance exactly across all four quadrants. The idealized weighted approximation density is therefore radial; this does not assert that every finite adaptive mesh must be exactly concentric.</p>
 </section>
-
 <section><h2>From Energy Symmetry to Mesh Density <span class="zh">從能量對稱性到網格密度</span></h2>
 <p>A robust method must respect the energy norm ‖κ<sup>1/2</sup>∇·‖. For an element <i>K</i> away from the origin, the local approximation scale is</p>
 <div class="equation"><span class="eqline">ε<sub>K</sub> ≃ <i>h</i><sub>K</sub><sup>2</sup> <i>r</i><sub>K</sub><sup>γ−2</sup>.</span></div>
-<p>No quadrant-dependent or interface-dependent factor remains. The principle of equal discretization-error distribution therefore requires elements at the same radius to have the same asymptotic size.</p>
+<p>No quadrant-dependent or interface-dependent factor remains. In the asymptotic isotropic, shape-regular error-equidistribution model, elements at the same radius should therefore have comparable sizes.</p>
 <div class="equation"><span class="eqline"><i>h</i>(<i>r</i>) ≃ <i>N</i><sup>−1/2</sup> <i>r</i><sup>1−γ/2</sup>,</span><span class="eqline"><i>n</i>(<i>r</i>) ≃ <i>N r</i><sup>γ−2</sup>,</span><span class="eqline"><i>h</i><sub>min</sub> ≃ <i>N</i><sup>−1/γ</sup>.</span></div>
 <div class="chain"><span class="eqline">coefficient-weighted energy symmetry</span><span class="eqline">↓</span><span class="eqline">radial local approximation difficulty</span><span class="eqline">↓</span><span class="eqline">error equidistribution</span><span class="eqline">↓</span><span class="eqline"><strong>radial adaptive mesh</strong></span></div>
 </section>
-
 <section><h2>The Mesh Is a Visual Diagnostic <span class="zh">網格本身就是診斷工具</span></h2>
-<p>A convergence rate reports how the global error decays, but it does not tell us where the degrees of freedom have been placed. Rate optimality does not determine spatial allocation.</p>
-<div class="box">For the Kellogg checkerboard, a non-radial mesh is visible evidence that the computation is not following the correct coefficient-weighted local difficulty.<span class="zh">對 Kellogg 棋盤問題而言，一張非徑向網格就是可見的證據：計算沒有遵循正確的系數加權局部難度。</span></div>
+<p>A convergence rate reports how the global error decays, but not how degrees of freedom are allocated. Rate optimality alone does not establish an optimal spatial distribution, so mesh geometry provides an additional diagnostic.</p>
+<div class="box">For this benchmark, a persistent, systematic quadrant bias under refinement is a diagnostic that the indicator may not follow the correct coefficient-weighted local difficulty. Small finite-level deviations from a perfectly radial mesh are not, by themselves, a failure.<span class="zh">對 Kellogg 棋盤問題而言，一張非徑向網格就是可見的證據：計算沒有遵循正確的系數加權局部難度。</span></div>
 <div class="comparison"><div class="card"><strong>Correct weighting</strong>Radial refinement toward the crossing, balanced quadrant counts, and no excess refinement along the interfaces.</div><div class="card"><strong>Wrong coefficient scaling</strong>Persistent angular bias, preference for one material, or refinement concentrated along the coefficient interfaces.</div></div>
 <p class="zh">因此不能只看 convergence history。對這個 benchmark 而言，網格圖包含全局收斂率所沒有的空間配置資訊。</p>
 </section>
-
 <section><h2>Radiality Is Special to This Benchmark <span class="zh">徑向性是這個 benchmark 的特殊結構</span></h2>
 <p>The conclusion is not that every robust estimator should produce a radial mesh. The Kellogg checkerboard is exceptional because its coefficient-weighted difficulty is radial. For a two-material problem whose weighted difficulty jumps across the interface, the same robust estimator correctly produces a strongly material-biased mesh.</p>
 <p class="zh">結論並不是所有 robust estimator 都應產生徑向網格。Kellogg 棋盤問題之所以特殊，是因為它的系數加權難度恰好具有徑向性。對另一個加權難度在界面上跳躍的雙材料問題，同一個 robust estimator 應當產生強烈的材料偏置網格。</p>
 <div class="box">What transfers is the coefficient-weighted principle, not the radial picture.<span class="zh">可以推廣的是系數加權原理，而不是徑向網格這張圖。</span></div>
 <figure class="mesh-figure single-figure">
-  <img src="quadratic_rt_mesh.png" alt="Adaptive triangular mesh for a two-material problem, with a strong horizontal material bias and substantially denser refinement in the upper half of the square.">
-  <figcaption><strong>A different problem, a different correct mesh.</strong> For the two-material example, the coefficient-weighted difficulty is not radial. The same robust estimator therefore places substantially more elements in one material region, producing the predicted material-biased mesh.<span class="zh"><strong>不同問題，正確網格也不同。</strong>在這個雙材料例子中，系數加權難度並非徑向。同一個 robust estimator 因而在其中一個材料區域配置更多單元，產生理論預測的材料偏置網格。</span></figcaption>
+<img alt="Adaptive triangular mesh for a two-material problem, with a strong horizontal material bias and substantially denser refinement in the upper half of the square." src="https://arxiv.org/html/2608.22991v2/quadratic_rt_mesh.png"/>
+<figcaption><strong>A different problem, a different correct mesh.</strong> For the two-material example, the coefficient-weighted difficulty is not radial. The same robust estimator therefore places substantially more elements in one material region, producing the predicted material-biased mesh.<span class="zh"><strong>不同問題，正確網格也不同。</strong>在這個雙材料例子中，系數加權難度並非徑向。同一個 robust estimator 因而在其中一個材料區域配置更多單元，產生理論預測的材料偏置網格。</span></figcaption>
 </figure>
 </section>
-
 <section><h2>A Closed Formula for the Benchmark <span class="zh">Benchmark 參數的閉式公式</span></h2>
 <p>The usual benchmark constants are often obtained from a nonlinear numerical solve and then copied from paper to paper. They actually follow from the elementary formulas</p>
 <div class="equation"><span class="eqline"><i>R</i> = cot<sup>2</sup>(πγ/4),</span><span class="eqline">ρ = π/4,</span><span class="eqline">σ = π/4 − π/(2γ).</span></div>
 <p>Thus the whole Kellogg family can be generated directly from γ at arbitrary precision.</p>
 <p class="zh">因此，整個 Kellogg family 都可以只由 γ 直接生成，不再需要重複求解那個非線性參數系統。</p>
 </section>
-
 <section><h2>Core Paper <span class="zh">核心論文</span></h2>
-<div class="paper"><p class="paper-title">Why the Kellogg Mesh Is Radial: A Mathematical Explanation of a Classical Computational Benchmark</p><p>Shun Zhang, 2026.</p><p class="links"><a href="https://arxiv.org/abs/2608.22991" target="_blank" rel="noopener noreferrer">arXiv</a> · <a href="https://arxiv.org/pdf/2608.22991" target="_blank" rel="noopener noreferrer">PDF</a> · <a href="https://doi.org/10.48550/arXiv.2608.22991" target="_blank" rel="noopener noreferrer">DOI</a></p></div>
+<div class="paper"><p class="paper-title">Why the Kellogg Mesh Is Radial: A Mathematical Explanation of a Classical Computational Benchmark</p><p>Shun Zhang, 2026.</p><p class="links"><a href="https://arxiv.org/abs/2608.22991" rel="noopener noreferrer" target="_blank">arXiv</a> · <a href="https://arxiv.org/pdf/2608.22991" rel="noopener noreferrer" target="_blank">PDF</a> · <a href="https://doi.org/10.48550/arXiv.2608.22991" rel="noopener noreferrer" target="_blank">DOI</a></p></div>
 </section>
 <footer>© Shun Zhang</footer>
 </main></body></html>
