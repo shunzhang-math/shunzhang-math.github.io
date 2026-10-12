@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="LSFEM coercivity: a direct inf-sup proof for general elliptic PDEs and the distinction between conforming FOSLS and nonconforming CR and div-curl least-squares methods.">
+<title>Where Does LSFEM Coercivity Come From? | Shun Zhang</title>
+<style>
+
+:root{color-scheme:light}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#fff;color:#202020;font:18px/1.72 Georgia,"Times New Roman",serif;-webkit-font-smoothing:antialiased}
+a{color:#174f86;text-underline-offset:.13em}
+a:hover{color:#0c345c}
+a:focus-visible{outline:2px solid #174f86;outline-offset:3px}
+.page{width:min(100% - 2.5rem,850px);margin:auto;padding:2.2rem 0 5rem}
+.home{display:inline-block;font:15px/1.5 Arial,Helvetica,sans-serif;text-decoration:none}
+header{margin:0}
+h1{margin:3.2rem 0 .45rem;font-size:clamp(2.25rem,6.3vw,4.5rem);font-weight:500;line-height:1.12;overflow-wrap:break-word}
+.zh-title{margin:0;color:#555;font-size:clamp(1.15rem,2.65vw,1.55rem);letter-spacing:.02em}
+.zh-title p{margin:0}
+.lead{margin:2rem 0 0;font-size:1.27rem;line-height:1.6}
+.lead p{margin:0}
+.lead.zh{margin-top:.8rem}
+.zh{font-family:"Noto Serif TC","Songti TC","PMingLiU",serif;color:#555}
+section{margin-top:3.7rem}
+h2{margin:0 0 1.25rem;padding-bottom:.45rem;border-bottom:1px solid #ddd;font-size:clamp(1.45rem,3.2vw,1.7rem);font-weight:500;line-height:1.4}
+h2 .zh{font-size:.76em}
+h3{font-size:1.15rem;font-weight:600;margin-top:2rem}
+p{margin:1.05rem 0}
+ul,ol{padding-left:1.45rem}
+li{margin:.62rem 0}
+.box{margin:1.55rem 0;padding:1.2rem 1.4rem;border-left:4px solid #174f86;background:#f6f8fa;font-size:1.08rem}
+.box>p:first-child{margin-top:0}
+.box>p:last-child{margin-bottom:0}
+.box .zh{display:block;margin-top:.7rem}
+.box .zh p{margin:.35rem 0 0}
+.equation,.formula{max-width:100%;overflow-x:auto;margin:1.4rem 0;padding:1rem 1.1rem;text-align:center;font-size:1.08rem;line-height:1.9}
+.equation math[display="block"],.formula math[display="block"]{margin:.1rem auto}
+.eqline{display:block;white-space:nowrap}
+.chain{margin:1.5rem 0;padding:1.3rem;border:1px solid #d9dfe5;background:#fbfcfd;text-align:center}
+.chain>p{margin:.45rem 0}
+.comparison{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:1.5rem 0}
+.card{min-width:0;padding:1.2rem;border:1px solid #ddd;background:#fcfcfc}
+.card p{margin:.5rem 0}
+.card strong{display:block;margin-bottom:.35rem}
+.paper{padding:1.35rem;border:1px solid #ddd;background:#fcfcfc}
+.paper p{margin:.5rem 0}
+.paper-title{font-weight:700}
+.links{font:15px/1.8 Arial,Helvetica,sans-serif}
+.figure-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.15rem;margin:1.7rem 0}
+.mesh-figure{margin:0}
+.mesh-figure img{display:block;width:100%;height:auto;border:1px solid #d4d8dc;background:#f3f6f8}
+.mesh-figure figcaption{margin-top:.65rem;font:15px/1.5 Arial,Helvetica,sans-serif;color:#4d4d4d}
+.mesh-figure figcaption .zh{display:block;margin-top:.25rem;font-size:.95em}
+.single-figure{width:min(100%,650px);margin:1.7rem auto}
+.terms{display:flex;flex-wrap:wrap;gap:.5rem}
+.term{padding:.3rem .6rem;border:1px solid #d8dce2;border-radius:999px;background:#fafbfc;font:14px Arial,Helvetica,sans-serif}
+footer{margin-top:5rem;border-top:1px solid #ddd;padding-top:1rem;color:#777;font:14px Arial,Helvetica,sans-serif}
+.cross-link{padding:1rem 1.2rem;background:#fafbfc;border:1px solid #e3e7eb}
+@media(max-width:620px){body{font-size:17px}.page{width:min(100% - 2rem,850px);padding-top:1.3rem}.comparison,.figure-grid{grid-template-columns:1fr}.equation,.formula{padding:.8rem .2rem;font-size:1rem}.box{padding:1rem 1.05rem}h1{margin-top:2.1rem;font-size:clamp(2.05rem,8vw,3.5rem)}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* Mathematical essay: bilingual pacing, long MathML, and card consistency */
+h2 .zh{display:block;margin:.22rem 0 0;font-size:.72em;line-height:1.45;font-weight:400}
+section>p.zh{color:#555;margin-top:.48rem}
+section>p:not(.zh){margin-bottom:.5rem}
+.box p{line-height:1.65}
+.box .zh{margin-top:.62rem}
+.formula{border:1px solid #edf0f3;border-radius:2px;background:#fbfcfd;scrollbar-width:thin}
+.formula math{max-width:none}
+.paper+.paper{margin-top:1rem}
+.paper-title{font-weight:700}
+.paper .links a{font-weight:600}
+.comparison .card .zh{margin-top:.65rem}
+@media(max-width:620px){.formula{padding:.7rem .45rem} h2 .zh{font-size:.74em}}
+
+</style>
+</head>
+<body>
+<main class="page">
+<a class="home" href="index.html">← Shun Zhang</a>
+<header>
+<h1>Where Does LSFEM Coercivity Come From?</h1>
+<p class="zh-title zh" lang="zh-Hant">LSFEM 的強制性究竟從何而來？</p>
+<p class="lead">An indefinite PDE can still yield a coercive least-squares method. The direct inf-sup proof reveals why—and what changes for nonconforming elements.</p>
+<p class="lead zh" lang="zh-Hant">原方程可以是不定的，但 least-squares 格式仍然可以 coercive。直接的 inf-sup 證明說明了原因，也揭示了 nonconforming 離散中的不同。</p>
+</header>
+<div id="content-wrapper"><section><h2 id="an-indefinite-pde-can-still-be-well-posed-不定的-pde-仍然可以適定">An Indefinite PDE Can Still Be Well-Posed <span class="zh">不定的 PDE 仍然可以適定</span></h2><p>Consider the general second-order elliptic equation</p><p class="zh">考慮一般二階橢圓方程</p><div class="formula"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>∇</mi><mspace width="-0.167em"></mspace><mo>⋅</mo><mrow><mo form="prefix" stretchy="true">(</mo><mi>A</mi><mi>∇</mi><mi>u</mi><mo form="postfix" stretchy="true">)</mo></mrow><mo>+</mo><mi>𝐛</mi><mo>⋅</mo><mi>∇</mi><mi>u</mi><mo>+</mo><mi>c</mi><mi>u</mi><mo>=</mo><mi>f</mi><mspace width="2.0em"></mspace><mrow><mtext mathvariant="normal">in </mtext><mspace width="0.333em"></mspace></mrow><mi>Ω</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">
+-\nabla\!\cdot(A\nabla u)+\boldsymbol b\cdot\nabla u+cu=f \qquad\text{in }\Omega.
+</annotation></semantics></math></div><p>The standard weak form may be indefinite because of the lower-order terms. A real Helmholtz problem away from its spectrum is a familiar example. The key assumption is <em>uniqueness</em> of the homogeneous elliptic problem, not coercivity of its usual bilinear form. In the classical elliptic setting, Fredholm theory then gives the required inf-sup stability.</p><p class="zh">由於低階項，標準弱形式可以是不定的。避開特徵值的實 Helmholtz 問題就是典型例子。關鍵是假設齊次問題只有零解，而不是要求原來的雙線性形式本身 coercive。在通常的橢圓方程框架下，Fredholm 理論便給出所需的 inf-sup 穩定性。</p><div class="box">
+<p><strong>The original PDE need not be coercive for its first-order least-squares formulation to be coercive.</strong></p>
+<p class="zh">原來的 PDE 變分形式不必 coercive，其一階系統最小二乘格式仍可以具有 coercivity。</p>
+</div></section><section><h2 id="the-first-order-residuals-一階系統的兩個殘差">The First-Order Residuals <span class="zh">一階系統的兩個殘差</span></h2><p>For the diffusion-flux formulation, set the unknown pair in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>H</mi><mi>N</mi></msub><mrow><mo form="prefix" stretchy="true">(</mo><mo>div</mo><mo>;</mo><mi>Ω</mi><mo form="postfix" stretchy="true">)</mo></mrow><mo>×</mo><msubsup><mi>H</mi><mi>D</mi><mn>1</mn></msubsup><mrow><mo form="prefix" stretchy="true">(</mo><mi>Ω</mi><mo form="postfix" stretchy="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">H_N(\operatorname{div};\Omega)\times H_D^1(\Omega)</annotation></semantics></math> and define</p><p class="zh">對 diffusion-flux formulation，取未知量於 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>H</mi><mi>N</mi></msub><mrow><mo form="prefix" stretchy="true">(</mo><mo>div</mo><mo>;</mo><mi>Ω</mi><mo form="postfix" stretchy="true">)</mo></mrow><mo>×</mo><msubsup><mi>H</mi><mi>D</mi><mn>1</mn></msubsup><mrow><mo form="prefix" stretchy="true">(</mo><mi>Ω</mi><mo form="postfix" stretchy="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">H_N(\operatorname{div};\Omega)\times H_D^1(\Omega)</annotation></semantics></math>，定義</p><div class="formula"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>r</mi><mn>1</mn></msub><mrow><mo form="prefix" stretchy="true">(</mo><mi>𝛕</mi><mo>,</mo><mi>v</mi><mo form="postfix" stretchy="true">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>𝛕</mi><mo>+</mo><mi>A</mi><mi>∇</mi><mi>v</mi><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>r</mi><mn>2</mn></msub><mrow><mo form="prefix" stretchy="true">(</mo><mi>𝛕</mi><mo>,</mo><mi>v</mi><mo form="postfix" stretchy="true">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>∇</mi><mspace width="-0.167em"></mspace><mo>⋅</mo><mi>𝛕</mi><mo>+</mo><mi>𝐛</mi><mo>⋅</mo><mi>∇</mi><mi>v</mi><mo>+</mo><mi>c</mi><mi>v</mi><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+r_1(\boldsymbol\tau,v)&amp;=\boldsymbol\tau+A\nabla v,\\
+r_2(\boldsymbol\tau,v)&amp;=\nabla\!\cdot\boldsymbol\tau+\boldsymbol b\cdot\nabla v+cv.
+\end{aligned}
+</annotation></semantics></math></div><p>Here the subscripted spaces encode <em>homogeneous</em> Neumann and Dirichlet conditions on the corresponding boundary parts. A standard least-squares functional is</p><p class="zh">這裡的下標表示相應邊界部分上的齊次 Neumann 與 Dirichlet 條件。標準 least-squares functional 為</p><div class="formula"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℒ</mi><mrow><mo form="prefix" stretchy="true">(</mo><mi>𝛕</mi><mo>,</mo><mi>v</mi><mo form="postfix" stretchy="true">)</mo></mrow><mo>=</mo><mo form="postfix" stretchy="false">∥</mo><msup><mi>A</mi><mrow><mi>−</mi><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msup><msub><mi>r</mi><mn>1</mn></msub><mrow><mo form="prefix" stretchy="true">(</mo><mi>𝛕</mi><mo>,</mo><mi>v</mi><mo form="postfix" stretchy="true">)</mo></mrow><msubsup><mo form="postfix" stretchy="false">∥</mo><mn>0</mn><mn>2</mn></msubsup><mi>+</mi><mo form="postfix" stretchy="false">∥</mo><msub><mi>r</mi><mn>2</mn></msub><mrow><mo form="prefix" stretchy="true">(</mo><mi>𝛕</mi><mo>,</mo><mi>v</mi><mo form="postfix" stretchy="true">)</mo></mrow><msubsup><mo form="postfix" stretchy="false">∥</mo><mn>0</mn><mn>2</mn></msubsup><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathcal L(\boldsymbol\tau,v)
+=\|A^{-1/2}r_1(\boldsymbol\tau,v)\|_0^2
++\|r_2(\boldsymbol\tau,v)\|_0^2.
+</annotation></semantics></math></div><p>Its coercivity is the estimate that the two residuals control the natural <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mrow><mo form="prefix" stretchy="true">(</mo><mo>div</mo><mo form="postfix" stretchy="true">)</mo></mrow><mo>×</mo><msup><mi>H</mi><mn>1</mn></msup></mrow><annotation encoding="application/x-tex">H(\operatorname{div})\times H^1</annotation></semantics></math> norm. We use the PDE’s inf-sup stability to prove it directly.</p><p class="zh">所謂 coercivity，就是這兩個殘差能控制自然的 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mrow><mo form="prefix" stretchy="true">(</mo><mo>div</mo><mo form="postfix" stretchy="true">)</mo></mrow><mo>×</mo><msup><mi>H</mi><mn>1</mn></msup></mrow><annotation encoding="application/x-tex">H(\operatorname{div})\times H^1</annotation></semantics></math> 範數。直接使用原 PDE 的 inf-sup 穩定性即可證明。</p></section><section><h2 id="a-two-line-coercivity-proof-兩三行完成的-coercivity-證明">A Two-Line Coercivity Proof <span class="zh">兩三行完成的 Coercivity 證明</span></h2><p>Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mrow><mo form="prefix" stretchy="true">(</mo><mi>⋅</mi><mo>,</mo><mi>⋅</mi><mo form="postfix" stretchy="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">a(\cdot,\cdot)</annotation></semantics></math> be the standard variational bilinear form. Green’s formula and the homogeneous boundary conditions give the exact identity</p><p class="zh">記 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mrow><mo form="prefix" stretchy="true">(</mo><mi>⋅</mi><mo>,</mo><mi>⋅</mi><mo form="postfix" stretchy="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">a(\cdot,\cdot)</annotation></semantics></math> 為標準變分雙線性形式。由 Green 公式及齊次邊界條件得到</p><div class="formula"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mrow><mo form="prefix" stretchy="true">(</mo><mi>v</mi><mo>,</mo><mi>w</mi><mo form="postfix" stretchy="true">)</mo></mrow><mo>=</mo><msub><mrow><mo form="prefix" stretchy="true">(</mo><msub><mi>r</mi><mn>1</mn></msub><mrow><mo form="prefix" stretchy="true">(</mo><mi>𝛕</mi><mo>,</mo><mi>v</mi><mo form="postfix" stretchy="true">)</mo></mrow><mo>,</mo><mi>∇</mi><mi>w</mi><mo form="postfix" stretchy="true">)</mo></mrow><mi>Ω</mi></msub><mo>+</mo><msub><mrow><mo form="prefix" stretchy="true">(</mo><msub><mi>r</mi><mn>2</mn></msub><mrow><mo form="prefix" stretchy="true">(</mo><mi>𝛕</mi><mo>,</mo><mi>v</mi><mo form="postfix" stretchy="true">)</mo></mrow><mo>,</mo><mi>w</mi><mo form="postfix" stretchy="true">)</mo></mrow><mi>Ω</mi></msub><mo>,</mo><mspace width="2.0em"></mspace><mi>w</mi><mo>∈</mo><msubsup><mi>H</mi><mi>D</mi><mn>1</mn></msubsup><mrow><mo form="prefix" stretchy="true">(</mo><mi>Ω</mi><mo form="postfix" stretchy="true">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+a(v,w)=(r_1(\boldsymbol\tau,v),\nabla w)_\Omega
++(r_2(\boldsymbol\tau,v),w)_\Omega,
+\qquad w\in H_D^1(\Omega).
+</annotation></semantics></math></div><p>Consequently, the PDE’s inf-sup estimate immediately yields</p><p class="zh">因此，由原 PDE 的 inf-sup estimate 立即得到</p><div class="formula"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mo form="postfix" stretchy="false">∥</mo><mi>v</mi><msub><mo form="postfix" stretchy="false">∥</mo><msup><mi>H</mi><mn>1</mn></msup></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>≲</mo><munder><mo>sup</mo><mrow><mn>0</mn><mo>≠</mo><mi>w</mi><mo>∈</mo><msubsup><mi>H</mi><mi>D</mi><mn>1</mn></msubsup><mrow><mo form="prefix" stretchy="true">(</mo><mi>Ω</mi><mo form="postfix" stretchy="true">)</mo></mrow></mrow></munder><mfrac><mrow><mo form="prefix" stretchy="true">|</mo><mi>a</mi><mrow><mo form="prefix" stretchy="true">(</mo><mi>v</mi><mo>,</mo><mi>w</mi><mo form="postfix" stretchy="true">)</mo></mrow><mo form="postfix" stretchy="true">|</mo></mrow><mrow><mo form="postfix" stretchy="false">∥</mo><mi>w</mi><msub><mo form="postfix" stretchy="false">∥</mo><msup><mi>H</mi><mn>1</mn></msup></msub></mrow></mfrac></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>≲</mo><mo form="postfix" stretchy="false">∥</mo><msub><mi>r</mi><mn>1</mn></msub><mrow><mo form="prefix" stretchy="true">(</mo><mi>𝛕</mi><mo>,</mo><mi>v</mi><mo form="postfix" stretchy="true">)</mo></mrow><msub><mo form="postfix" stretchy="false">∥</mo><mn>0</mn></msub><mi>+</mi><mo form="postfix" stretchy="false">∥</mo><msub><mi>r</mi><mn>2</mn></msub><mrow><mo form="prefix" stretchy="true">(</mo><mi>𝛕</mi><mo>,</mo><mi>v</mi><mo form="postfix" stretchy="true">)</mo></mrow><msub><mo form="postfix" stretchy="false">∥</mo><mn>0</mn></msub><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+\|v\|_{H^1}
+&amp;\lesssim \sup_{0\ne w\in H_D^1(\Omega)}
+\frac{|a(v,w)|}{\|w\|_{H^1}}\\
+&amp;\lesssim\|r_1(\boldsymbol\tau,v)\|_0
++\|r_2(\boldsymbol\tau,v)\|_0.
+\end{aligned}
+</annotation></semantics></math></div><p>The definitions of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mn>1</mn></msub><annotation encoding="application/x-tex">r_1</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mn>2</mn></msub><annotation encoding="application/x-tex">r_2</annotation></semantics></math> then bound <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝛕</mi><annotation encoding="application/x-tex">\boldsymbol\tau</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>∇</mi><mspace width="-0.167em"></mspace><mo>⋅</mo><mi>𝛕</mi></mrow><annotation encoding="application/x-tex">\nabla\!\cdot\boldsymbol\tau</annotation></semantics></math>. Hence</p><p class="zh">再利用 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mn>1</mn></msub><mo>,</mo><msub><mi>r</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">r_1,r_2</annotation></semantics></math> 的定義控制 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝛕</mi><annotation encoding="application/x-tex">\boldsymbol\tau</annotation></semantics></math> 和 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>∇</mi><mspace width="-0.167em"></mspace><mo>⋅</mo><mi>𝛕</mi></mrow><annotation encoding="application/x-tex">\nabla\!\cdot\boldsymbol\tau</annotation></semantics></math>，便得到</p><div class="formula"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><menclose notation="box"><mrow><mspace width="0.222em"></mspace><mo form="postfix" stretchy="false">∥</mo><mi>𝛕</mi><msubsup><mo form="postfix" stretchy="false">∥</mo><mrow><mi>H</mi><mrow><mo form="prefix" stretchy="true">(</mo><mo>div</mo><mo form="postfix" stretchy="true">)</mo></mrow></mrow><mn>2</mn></msubsup><mi>+</mi><mo form="postfix" stretchy="false">∥</mo><mi>v</mi><msubsup><mo form="postfix" stretchy="false">∥</mo><msup><mi>H</mi><mn>1</mn></msup><mn>2</mn></msubsup><mspace width="0.222em"></mspace><mo>≲</mo><mspace width="0.222em"></mspace><mi>ℒ</mi><mrow><mo form="prefix" stretchy="true">(</mo><mi>𝛕</mi><mo>,</mo><mi>v</mi><mo form="postfix" stretchy="true">)</mo></mrow><mi>.</mi></mrow></menclose><annotation encoding="application/x-tex">
+\boxed{
+\|\boldsymbol\tau\|_{H(\operatorname{div})}^2
++\|v\|_{H^1}^2
+\ \lesssim\ \mathcal L(\boldsymbol\tau,v).
+}
+</annotation></semantics></math></div><div class="box">
+<p><strong>The coercivity proof is a direct consequence of the PDE’s inf-sup stability.</strong> There is no need for another compactness-by-contradiction argument inside the least-squares proof.</p>
+<p><strong>LSFEM 的 coercivity 直接來自 PDE 的 inf-sup stability。</strong> 不必在 least-squares 證明中再做一次 compactness 與 contradiction 論證。</p>
+</div><p>This is the main idea of the 2023 coercivity paper. The paper also treats the total-flux formulation and both <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math>- and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>H</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><annotation encoding="application/x-tex">H^{-1}</annotation></semantics></math>-based residuals.</p><p class="zh">這就是 2023 年 coercivity 論文的核心。文章同時處理 total-flux formulation，以及 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>2</mn></msup><annotation encoding="application/x-tex">L^2</annotation></semantics></math> 和 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>H</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><annotation encoding="application/x-tex">H^{-1}</annotation></semantics></math> 兩種殘差範數。</p></section><section><h2 id="why-conforming-lsfem-inherits-stability-為什麼-conforming-lsfem-自動穩定">Why Conforming LSFEM Inherits Stability <span class="zh">為什麼 Conforming LSFEM 自動穩定</span></h2><p>Once the continuous coercivity estimate holds, it holds on <em>every conforming finite element subspace</em> of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>H</mi><mi>N</mi></msub><mrow><mo form="prefix" stretchy="true">(</mo><mo>div</mo><mo form="postfix" stretchy="true">)</mo></mrow><mo>×</mo><msubsup><mi>H</mi><mi>D</mi><mn>1</mn></msubsup></mrow><annotation encoding="application/x-tex">H_N(\operatorname{div})\times H_D^1</annotation></semantics></math>. No sufficiently-small-mesh assumption is needed, even when the original elliptic variational problem is indefinite.</p><p class="zh">連續 coercivity 一旦成立，對 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>H</mi><mi>N</mi></msub><mrow><mo form="prefix" stretchy="true">(</mo><mo>div</mo><mo form="postfix" stretchy="true">)</mo></mrow><mo>×</mo><msubsup><mi>H</mi><mi>D</mi><mn>1</mn></msubsup></mrow><annotation encoding="application/x-tex">H_N(\operatorname{div})\times H_D^1</annotation></semantics></math> 的<strong>任何 conforming finite element subspace</strong> 都成立。即使原橢圓問題是不定的，也不要求網格尺寸充分小。</p><p>The consequences are familiar: a symmetric positive definite algebraic system, quasi-best approximation, and a least-squares functional that provides the natural built-in error measure.</p><p class="zh">因此可得到對稱正定代數系統、準最佳逼近，以及 least-squares functional 本身所提供的內建誤差度量。</p><div class="box">
+<p><strong>For conforming LSFEM, stability is inherited from the continuous first-order system—not recovered through a separate discrete inf-sup condition.</strong></p>
+<p class="zh">對 conforming LSFEM，穩定性直接由連續一階系統繼承，無須另外建立 discrete inf-sup condition。</p>
+</div></section><section><h2 id="what-changes-with-crouzeixraviart-換成-crouzeixraviart-後改變了什麼">What Changes with Crouzeix–Raviart? <span class="zh">換成 Crouzeix–Raviart 後改變了什麼？</span></h2><p>The nonconforming case is different. In the two-field potential–flux div-LSFEM, the flux uses Raviart–Thomas elements and the potential uses Crouzeix–Raviart elements:</p><p>Nonconforming 情形就不同。Two-field potential–flux div-LSFEM 以 Raviart–Thomas 元逼近通量、Crouzeix–Raviart 元逼近勢函數：</p><div class="formula"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo form="prefix" stretchy="true">(</mo><msub><mi>𝛕</mi><mi>h</mi></msub><mo>,</mo><msub><mi>v</mi><mi>h</mi></msub><mo form="postfix" stretchy="true">)</mo></mrow><mo>∈</mo><mi>R</mi><msub><mi>T</mi><mn>0</mn></msub><mo>×</mo><mi>C</mi><msub><mi>R</mi><mn>1</mn></msub><mo>,</mo><mspace width="2.0em"></mspace><mi>∇</mi><msub><mi>v</mi><mi>h</mi></msub><mspace width="0.222em"></mspace><mo>→</mo><mspace width="0.222em"></mspace><msub><mi>∇</mi><mi>h</mi></msub><msub><mi>v</mi><mi>h</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+(\boldsymbol\tau_h,v_h)\in RT_0\times CR_1,
+\qquad \nabla v_h\ \longrightarrow\ \nabla_h v_h.
+</annotation></semantics></math></div><p>Since <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><msub><mi>R</mi><mn>1</mn></msub><mo>⊄</mo><msup><mi>H</mi><mn>1</mn></msup><mrow><mo form="prefix" stretchy="true">(</mo><mi>Ω</mi><mo form="postfix" stretchy="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">CR_1\not\subset H^1(\Omega)</annotation></semantics></math>, continuous norm equivalence cannot simply be restricted to this discrete space. The two-field least-squares functional retains the ordinary elementwise residuals, but its discrete solvability requires a new argument.</p><p class="zh">由於 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><msub><mi>R</mi><mn>1</mn></msub><mo>⊄</mo><msup><mi>H</mi><mn>1</mn></msup><mrow><mo form="prefix" stretchy="true">(</mo><mi>Ω</mi><mo form="postfix" stretchy="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">CR_1\not\subset H^1(\Omega)</annotation></semantics></math>，不能把連續 norm equivalence 直接限制到這個離散空間。Two-field functional 仍然採用通常的逐單元殘差，但必須重新證明離散問題的可解性。</p><p>The Liang–Zhang paper gives <strong>three proofs</strong> of discrete solvability for sufficiently fine meshes: one based on coercivity of the original bilinear form and two under the minimal uniqueness assumption for the elliptic PDE.</p><p>Liang–Zhang 論文對充分細的網格給出<strong>三種離散可解性證明</strong>：一種基於原雙線性形式的 coercivity，另外兩種只使用橢圓方程的 minimal uniqueness assumption。</p><p>There is a second, more surprising distinction. A counterexample shows that the two-field div least-squares functional has <strong>no norm equivalence on the sum space</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>H</mi><mn>1</mn></msup><mo>+</mo><mi>C</mi><msub><mi>R</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">H^1+CR_1</annotation></semantics></math>. Therefore, unlike conforming FOSLS, this functional cannot serve directly as a built-in a posteriori error estimator for the natural error. The paper develops separate reliable and efficient estimators.</p><p class="zh">還有一個更重要的區別：論文給出反例，證明 two-field div least-squares functional 在 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>H</mi><mn>1</mn></msup><mo>+</mo><mi>C</mi><msub><mi>R</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">H^1+CR_1</annotation></semantics></math> 的和空間上<strong>沒有 norm equivalence</strong>。因此它不能像 conforming FOSLS 那樣直接充當自然誤差的內建 a posteriori estimator；文章另外構造了可靠且有效率的誤差估計量。</p><div class="box">
+<p><strong>Discrete solvability and norm equivalence on an error space are not the same property.</strong></p>
+<p class="zh"><strong>離散問題可解，與在誤差所在空間具有 norm equivalence，是兩件不同的事。</strong></p>
+</div></section><section><h2 id="the-three-field-divcurl-formulation-three-field-divcurl-格式">The Three-Field Div–Curl Formulation <span class="zh">Three-Field Div–Curl 格式</span></h2><p>The same JSC paper introduces a potential–flux–intensity three-field div–curl least-squares formulation. Its stability mechanism is stronger: under the minimal uniqueness assumption, the least-squares functional is norm equivalent in the appropriate abstract nonconforming piecewise <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>H</mi><mn>1</mn></msup><annotation encoding="application/x-tex">H^1</annotation></semantics></math> space.</p><p class="zh">同一篇 JSC 論文還引入 potential–flux–intensity 的 three-field div–curl least-squares formulation。它的穩定性結果更強：在 minimal uniqueness assumption 下，least-squares functional 在相應的 abstract nonconforming piecewise <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>H</mi><mn>1</mn></msup><annotation encoding="application/x-tex">H^1</annotation></semantics></math> 空間中具有 norm equivalence。</p><p>As a result, this three-field formulation <strong>has no restriction requiring a sufficiently small mesh</strong>, and its least-squares functional <strong>is a built-in a posteriori error estimator</strong>.</p><p class="zh">因此，這個 three-field formulation <strong>不需要網格尺寸充分小的限制</strong>，而且其 least-squares functional <strong>可以直接作為內建 a posteriori error estimator</strong>。</p><div class="comparison">
+<div class="card">
+<strong>Two-field div-LSFEM / CR</strong>
+<p>
+Discrete solvability for sufficiently fine meshes; no sum-space norm equivalence; separate a posteriori estimators.
+</p>
+<p class="zh zh">
+充分細網格上可解；和空間中沒有 norm equivalence；需要另外構造誤差估計量。
+</p>
+</div>
+<div class="card">
+<strong>Three-field div–curl LSFEM</strong>
+<p>
+Norm equivalence in the nonconforming piecewise space; no small-mesh restriction; built-in estimator.
+</p>
+<p class="zh zh">
+在 nonconforming piecewise 空間中有 norm equivalence；不要求小網格；具有內建估計量。
+</p>
+</div>
+</div></section><section><h2 id="the-mathematical-message-數學上的主線">The Mathematical Message <span class="zh">數學上的主線</span></h2><p>The continuous PDE supplies inf-sup stability; that stability gives a short coercivity proof for conforming FOSLS. Nonconforming approximation changes the underlying space, so the stability question must be answered again. The answer depends on the <em>first-order formulation</em>, not merely on minimizing a sum of squared residuals.</p><p class="zh">連續 PDE 提供 inf-sup stability，從而直接得到 conforming FOSLS 的 coercivity。當逼近空間變成 nonconforming，穩定性問題就必須重新處理；答案取決於<strong>一階系統如何構造</strong>，而不只是把殘差平方相加。</p><div class="box">
+<p><strong>PDE inf-sup stability <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>⇒</mo><annotation encoding="application/x-tex">\Longrightarrow</annotation></semantics></math> conforming FOSLS coercivity.</strong> For nonconforming LSFEM, the two-field and three-field formulations lead to genuinely different stability and error-estimation theories.</p>
+<p><strong>PDE 的 inf-sup stability 導出 conforming FOSLS 的 coercivity。</strong> 對 nonconforming LSFEM，two-field 與 three-field formulation 則有本質不同的穩定性及誤差估計理論。</p>
+</div></section><section><h2 id="papers-相關論文">Papers <span class="zh">相關論文</span></h2><div class="paper">
+<p class="paper-title">
+A simple proof of coerciveness of first-order system least-squares methods for general second-order elliptic PDEs
+</p>
+<p>
+Shun Zhang · <em>Computers &amp; Mathematics with Applications</em> 130 (2023), 98–104.
+</p>
+<p class="links">
+<a href="31_2023_camwa_lsfem_proof.pdf" rel="noopener noreferrer" target="_blank">PDF</a>
+</p>
+</div><div class="paper">
+<p class="paper-title">
+Least-Squares Methods with Nonconforming Finite Elements for General Second-Order Elliptic Equations
+</p>
+<p>
+Yuxiang Liang and Shun Zhang · <em>Journal of Scientific Computing</em> 96 (2023), Article 15.
+</p>
+<p class="links">
+<a href="32_2023_jsc_nc_lsfem.pdf" rel="noopener noreferrer" target="_blank">PDF</a>
+</p>
+</div></section></div>
+<footer>© Shun Zhang</footer>
+</main>
+</body>
+</html>
