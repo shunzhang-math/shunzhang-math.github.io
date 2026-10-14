@@ -75,6 +75,13 @@ h2 .zh{margin-left:.45rem;font-family:"Noto Serif TC","Songti TC","PMingLiU",ser
 <span class="subtopic-answer zh">LSFEM coercivity 來自 PDE stability；inf-sup 是線性問題的變分表述。Nonconforming 方法則需另外分析穩定性。</span>
 </div>
 <div class="subtopic-item">
+<a href="weak-bc-lsfem.html">LSFEM with weakly imposed boundary conditions</a>
+<strong class="subtopic-statement">How Weak Can Boundary Enforcement Be?</strong>
+<span class="subtopic-answer">Sharp boundary weights: h<sub>F</sub><sup>−1</sup> for Dirichlet, 1 for Neumann. PDE stability yields norm and error equivalences, with fully discontinuous extensions.</span>
+<strong class="subtopic-statement zh">弱施加邊界條件，權重究竟可以多弱？</strong>
+<span class="subtopic-answer zh">Dirichlet 使用 h<sub>F</sub><sup>−1</sup>，Neumann 使用 1；由 PDE stability 得到範數與誤差等價，並延伸到 fully discontinuous 離散。</span>
+</div>
+<div class="subtopic-item">
 <a href="hminus1-lsfem.html"><i>H</i><sup>−1</sup> data and first-order least squares</a>
 <strong class="subtopic-statement">Do We Really Need an <i>H</i><sup>−1</sup>-Norm LSFEM?</strong>
 <span class="subtopic-answer">A divergence-form splitting and the correct boundary treatment retain the standard <i>L</i><sup>2</sup>-residual formulation.</span>
@@ -108,6 +115,7 @@ h2 .zh{margin-left:.45rem;font-family:"Noto Serif TC","Songti TC","PMingLiU",ser
 <section id="publications">
 <h2>Selected Papers <span class="zh" lang="zh-Hant">部分論文</span></h2>
 <ol class="publications">
+<li><a href="https://arxiv.org/abs/2610.17678" target="_blank" rel="noopener noreferrer">Least-Squares Finite Element Methods with Weakly Imposed Boundary Conditions: Norm and Error Equivalences, Over-Penalization, and Fully Discontinuous Discretizations</a><span class="paper-meta">Shun Zhang · arXiv:2610.17678 [math.NA] · 2026</span></li>
 <li><a href="https://arxiv.org/abs/2610.08016" target="_blank" rel="noopener noreferrer">FOSLS-deRhaNN: native de Rham neural classes for H(div) and H(curl) with applications to first-order system least-squares neural network methods for partial differential equations</a><span class="paper-meta">Shun Zhang · arXiv:2610.08016 [math.NA] · 2026</span></li>
 <li><a href="https://arxiv.org/abs/2608.22991" target="_blank" rel="noopener noreferrer">Why the Kellogg Mesh Is Radial: A Mathematical Explanation of a Classical Computational Benchmark</a><span class="paper-meta">Shun Zhang · arXiv:2608.22991 · 2026</span></li>
 <li><a href="https://arxiv.org/abs/2608.17575" target="_blank" rel="noopener noreferrer">Mixed Finite Element Methods for a Dirac Source: Divergence-Form Splitting and <i>L</i><sup>p</sup> Error Analysis</a><span class="paper-meta">Yueyao Wu and Shun Zhang · arXiv:2608.17575 · 2026</span></li>
