@@ -82,11 +82,18 @@ h2 .zh{margin-left:.45rem;font-family:"Noto Serif TC","Songti TC","PMingLiU",ser
 <span class="subtopic-answer zh">Dirichlet 使用 h<sub>F</sub><sup>−1</sup>，Neumann 使用 1；由 PDE stability 得到範數與誤差等價，並延伸到 fully discontinuous 離散。</span>
 </div>
 <div class="subtopic-item">
-<a href="hminus1-lsfem.html"><i>H</i><sup>−1</sup> data and first-order least squares</a>
+<a href="hminus1-lsfem.html"><i>H</i><sup>−1</sup> data and first-order system least squares</a>
 <strong class="subtopic-statement">Do We Really Need an <i>H</i><sup>−1</sup>-Norm LSFEM?</strong>
 <span class="subtopic-answer">A divergence-form splitting and the correct boundary treatment retain the standard <i>L</i><sup>2</sup>-residual formulation.</span>
 <strong class="subtopic-statement zh">我們真的需要 <i>H</i><sup>−1</sup>-範數 LSFEM 嗎？</strong>
 <span class="subtopic-answer zh">修正通量、保留 <i>L</i><sup>2</sup> 殘差，並正確處理混合邊界條件。</span>
+</div>
+<div class="subtopic-item">
+<a href="nonintrusive-lsfem.html">Non-intrusive least-squares functional error estimation</a>
+<strong class="subtopic-statement">Solve with Your Preferred Solver. Estimate with Least Squares.</strong>
+<span class="subtopic-answer">The a posteriori estimator does not depend on your PDE solver. Keep its solution, recover a flux, and use the least-squares functional to estimate the error.</span>
+<strong class="subtopic-statement zh">用你喜歡的求解器求解；用最小二乘泛函做後驗誤差估計。</strong>
+<span class="subtopic-answer zh">原方程用什麼方法求解都可以；保留近似解、恢復 flux，再由 LS functional 獨立進行後驗誤差估計。</span>
 </div>
 </div>
 </li>
@@ -120,6 +127,7 @@ h2 .zh{margin-left:.45rem;font-family:"Noto Serif TC","Songti TC","PMingLiU",ser
 <li><a href="https://arxiv.org/abs/2608.22991" target="_blank" rel="noopener noreferrer">Why the Kellogg Mesh Is Radial: A Mathematical Explanation of a Classical Computational Benchmark</a><span class="paper-meta">Shun Zhang · arXiv:2608.22991 · 2026</span></li>
 <li><a href="https://arxiv.org/abs/2608.17575" target="_blank" rel="noopener noreferrer">Mixed Finite Element Methods for a Dirac Source: Divergence-Form Splitting and <i>L</i><sup>p</sup> Error Analysis</a><span class="paper-meta">Yueyao Wu and Shun Zhang · arXiv:2608.17575 · 2026</span></li>
 <li><a href="https://arxiv.org/abs/2607.23850" target="_blank" rel="noopener noreferrer">Goal-Oriented Error Estimation for Least-Squares Finite Element Methods via Physically Meaningful Adjoint PDEs</a><span class="paper-meta">Yueyao Wu and Shun Zhang · arXiv:2607.23850 · 2026</span></li>
+<li><a href="https://doi.org/10.1016/j.camwa.2025.05.011" target="_blank" rel="noopener noreferrer">Non-intrusive least-squares functional a posteriori error estimator: Linear and nonlinear problems with plain convergence</a><span class="paper-meta">Ziyan Li and Shun Zhang · Computers &amp; Mathematics with Applications 191 (2025), 275–295 · <a href="nonintrusive-lsfem.html">Research page</a></span></li>
 <li><a href="32_2023_jsc_nc_lsfem.pdf" target="_blank" rel="noopener noreferrer">Least-Squares Methods with Nonconforming Finite Elements for General Second-Order Elliptic Equations</a><span class="paper-meta">Yuxiang Liang and Shun Zhang · Journal of Scientific Computing 96 (2023), Article 15</span></li>
 <li><a href="https://doi.org/10.1016/j.camwa.2022.11.021" target="_blank" rel="noopener noreferrer">A simple proof of coerciveness of first-order system least-squares methods for general second-order elliptic PDEs</a><span class="paper-meta">Shun Zhang · Computers &amp; Mathematics with Applications 130 (2023), 98–104</span></li>
 <li><a href="https://doi.org/10.1016/j.camwa.2022.07.014" target="_blank" rel="noopener noreferrer">Battling Gibbs phenomenon: On finite element approximations of discontinuous solutions of PDEs</a><span class="paper-meta">Shun Zhang · Computers &amp; Mathematics with Applications 122 (2022), 35–47</span></li>
